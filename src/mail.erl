@@ -14,13 +14,14 @@
 
 -module(mail).
 
--export_type([imf/0, headers/0, header/0, header_name/0, header_value/0]).
+-export_type([imf/0, header_fields/0, header_field/0, header_field_name/0,
+              header_field_value/0]).
 
--type imf() :: #{header => headers(),
+-type imf() :: #{header => header_fields(),
                  body => binary()}.
 
--type headers() :: [header()].
--type header() :: {header_name(), header_value()}.
+-type header_fields() :: [header_field()].
+-type header_field() :: {header_field_name(), header_field_value()}.
 
--type header_name() :: binary().
--type header_value() :: binary().
+-type header_field_name() :: binary().
+-type header_field_value() :: binary().

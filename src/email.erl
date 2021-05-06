@@ -18,7 +18,7 @@
               header_field_value/0]).
 
 -type message() :: #{header => header_fields(),
-                 body => binary()}.
+                     body => binary()}.
 
 -type header_fields() :: [header_field()].
 -type header_field() :: {header_field_name(), header_field_value()}.

@@ -14,7 +14,7 @@
 
 -module(email).
 
--export([encode/1]).
+-export([encode/1, encode/2]).
 
 -export_type([raw_message/0, message/0, header_fields/0, header_field/0,
               header_field_name/0, header_field_value/0]).
@@ -34,3 +34,8 @@
         {ok, email:raw_message()} | {error, email_encoder:error_reason()}.
 encode(Message) ->
   email_encoder:encode(Message).
+
+-spec encode(email:message(), email_encoder:options()) ->
+        {ok, email:raw_message()} | {error, email_encoder:error_reason()}.
+encode(Message, Options) ->
+  email_encoder:encode(Message, Options).

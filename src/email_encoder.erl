@@ -14,13 +14,19 @@
 
 -module(email_encoder).
 
--export([encode/1]).
+-export([encode/1, encode/2]).
 
--export_type([error_reason/0]).
+-export_type([options/0, error_reason/0]).
 
+-type options() :: map().
 -type error_reason() :: term().
 
 -spec encode(email:message()) ->
         {ok, email:raw_message()} | {error, term()}.
-encode(_) ->
+encode(Message) ->
+  encode(Message, #{}).
+
+-spec encode(email:message(), options()) ->
+        {ok, email:raw_message()} | {error, term()}.
+encode(_, _) ->
   {error, foo}.

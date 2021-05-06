@@ -14,10 +14,10 @@
 
 -module(email).
 
--export_type([imf/0, header_fields/0, header_field/0, header_field_name/0,
+-export_type([message/0, header_fields/0, header_field/0, header_field_name/0,
               header_field_value/0]).
 
--type imf() :: #{header => header_fields(),
+-type message() :: #{header => header_fields(),
                  body => binary()}.
 
 -type header_fields() :: [header_field()].

@@ -14,7 +14,7 @@
 
 -module(email).
 
--export([generate/1]).
+-export([encode/1]).
 
 -export_type([raw_message/0, message/0, header_fields/0, header_field/0,
               header_field_name/0, header_field_value/0]).
@@ -30,7 +30,7 @@
 -type header_field_name() :: binary().
 -type header_field_value() :: binary().
 
--spec generate(email:message()) ->
-        {ok, email:raw_message()} | {error, email_generate:error_reason()}.
-generate(Message) ->
-  email_generate:generate(Message).
+-spec encode(email:message()) ->
+        {ok, email:raw_message()} | {error, email_encoder:error_reason()}.
+encode(Message) ->
+  email_encoder:encode(Message).

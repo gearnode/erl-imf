@@ -12,15 +12,15 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 %% IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(email_generate).
+-module(email_encoder).
 
--export([generate/1]).
+-export([encode/1]).
 
 -export_type([error_reason/0]).
 
 -type error_reason() :: term().
 
--spec generate(email:message()) ->
+-spec encode(email:message()) ->
         {ok, email:raw_message()} | {error, term()}.
-generate(_Message) ->
+encode(_) ->
   {error, foo}.

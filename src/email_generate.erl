@@ -12,25 +12,15 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 %% IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(email).
+-module(email_generate).
 
 -export([generate/1]).
 
--export_type([raw_message/0, message/0, header_fields/0, header_field/0,
-              header_field_name/0, header_field_value/0]).
+-export_type([error_reason/0]).
 
--type raw_message() :: binary().
-
--type message() :: #{header => header_fields(),
-                     body => binary()}.
-
--type header_fields() :: [header_field()].
--type header_field() :: {header_field_name(), header_field_value()}.
-
--type header_field_name() :: binary().
--type header_field_value() :: binary().
+-type error_reason() :: term().
 
 -spec generate(email:message()) ->
-        {ok, email:raw_message()} | {error, email_generate:error_reason()}.
-generate(Message) ->
-  email_generate:generate(Message).
+        {ok, email:raw_message()} | {error, term()}.
+generate(_Message) ->
+  {error, foo}.

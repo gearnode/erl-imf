@@ -12,17 +12,16 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 %% IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-{application, mail,
- [{description, "E-Mail library in Erlang"},
-  {vsn, "git"},
-  {registered, []},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
+-module(email).
 
-  {licenses, ["ISC"]},
-  {links, []}
- ]}.
+-export_type([imf/0, header_fields/0, header_field/0, header_field_name/0,
+              header_field_value/0]).
+
+-type imf() :: #{header => header_fields(),
+                 body => binary()}.
+
+-type header_fields() :: [header_field()].
+-type header_field() :: {header_field_name(), header_field_value()}.
+
+-type header_field_name() :: binary().
+-type header_field_value() :: binary().

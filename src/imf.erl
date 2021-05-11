@@ -79,4 +79,4 @@
 
 -type date() :: {localtime, calendar:datetime()}.
 
--type body() :: term().
+-type body() :: iodata().

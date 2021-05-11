@@ -14,13 +14,16 @@
 
 -module(imf).
 
+-export([encode/1, foo/0]).
+
 -export_type([message/0, header/0, body/0]).
 
 -export_type([field/0, origination_date_field/0, originator_field/0,
               destination_address_field/0, identification_field/0,
               informational_field/0, resent_field/0]).
 
--export_type([unstructured/0, msg_id/0, mailbox/0, group/0, phrase/0, date/0]).
+-export_type([unstructured/0, msg_id/0, address/0, mailbox/0, group/0,
+              phrase/0, date/0]).
 
 -type message() :: #{header := header(), body := body()}.
 
@@ -67,16 +70,65 @@
 
 -type unstructured() :: binary().
 
--type msg_id() :: binary().
+-type msg_id() :: {binary(), binary()}.
 
 -type address() :: mailbox() | group().
 
--type mailbox() :: #{name => binary(), address := binary()}.
+-type mailbox() :: {mailbox, #{name => binary(), address := binary()}}.
 
--type group() :: #{name := binary(), addresses => [mailbox()]}.
+-type group() :: {group, #{name := binary(), addresses => [mailbox()]}}.
 
 -type phrase() :: binary().
 
 -type date() :: {localtime, calendar:datetime()}.
 
 -type body() :: iodata().
+
+-spec encode(message()) -> iodata().
+encode(#{header := Header, body := _}) ->
+  encode_header(Header).
+
+-spec encode_header(header()) -> iodata().
+encode_header(Fields) ->
+  lists:foldl(fun encode_field/2, [], Fields).
+
+-spec encode_field(field(), iodata()) -> iodata().
+encode_field({date, Value}, Acc) ->
+  [["Date: ", imf_date_field:encode(Value)] | Acc];
+encode_field({from, Value}, Acc) ->
+  [["From: ", imf_address_field:encode(Value)] | Acc];
+encode_field({sender, Value}, Acc) ->
+  [["Sender: ", imf_address_field:encode([Value])] | Acc];
+encode_field({reply_to, Value}, Acc) ->
+  [["Reply-To: ", imf_address_field:encode(Value)] | Acc];
+encode_field({to, Value}, Acc) ->
+  [["To: ", imf_address_field:encode(Value)] | Acc];
+encode_field({cc, Value}, Acc) ->
+  [["Cc: ", imf_address_field:encode(Value)] | Acc];
+encode_field({bcc, _}, Acc) ->
+  Acc;
+encode_field({message_id, Value}, Acc) ->
+  [["Message-ID: ", imf_message_id:encode([Value])] | Acc];
+encode_field({in_reply_to, Value}, Acc) ->
+  [["In-Reply-To: ", imf_message_id:encode(Value)] | Acc];
+encode_field({references, Value}, Acc) ->
+  [["References: ", imf_message_id:encode(Value)] | Acc].
+
+foo() ->
+  Mail = #{header =>
+             [{from,
+               [{mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}},
+                {mailbox, #{address => <<"bryan@example.com">>}}]},
+              {sender,
+               {mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}}},
+              {reply_to,
+               [{mailbox, #{address => <<"foo@example.com">>}},
+                {group, #{name => <<"Mon super group">>,
+                          addresses =>
+                            [{mailbox, #{address => <<"group1@example.com">>}},
+                             {mailbox, #{address => <<"group2@example.com">>}}]}}]},
+              {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
+              {date, {localtime, calendar:local_time()}}],
+           body =>
+             <<"hello world">>},
+  io:format("~p~n", [iolist_to_binary(encode(Mail))]).

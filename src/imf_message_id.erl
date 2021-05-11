@@ -12,21 +12,15 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 %% IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(email_encoder).
+-module(imf_message_id).
 
--export([encode/1, encode/2]).
+-export([encode/1]).
 
--export_type([options/0, error_reason/0]).
+-spec encode([imf:msg_id()]) -> iodata().
+encode(MessageIds) ->
+  [lists:join(" ", lists:foldl(fun encode/2, [], MessageIds)), "\r\n"].
 
--type options() :: map().
--type error_reason() :: term().
-
--spec encode(email:message()) ->
-        {ok, email:raw_message()} | {error, term()}.
-encode(Message) ->
-  encode(Message, #{}).
-
--spec encode(email:message(), options()) ->
-        {ok, email:raw_message()} | {error, term()}.
-encode(_, _) ->
-  {error, foo}.
+-spec encode(imf:msg_id(), iodata()) -> iodata().
+encode({Left, Right}, Acc) ->
+  [["<", Left, "@", Right, ">"] | Acc].
+  

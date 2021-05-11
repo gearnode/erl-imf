@@ -12,18 +12,13 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 %% IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(imf_unstructured_header_field).
+-module(imf_unstructured_field).
 
 -export([encode/2]).
 
--spec encode(binary(), binary()) -> iodata().
-encode(Name, Value) ->
-  Prepend = byte_size(Name) + 1,
-  [Name, $:, wrap_lines(Value, Prepend)].
-
--spec wrap_lines(binary(), pos_integer()) -> iodata().
-wrap_lines(Bin, Prepend) ->
-  wrap_lines(Bin, Prepend, []).
+-spec encode(imf:unstructured(), pos_integer()) -> iodata().
+encode(Value, Prepend) ->
+  wrap_lines(Value, Prepend, []).
 
 -spec wrap_lines(binary(), non_neg_integer(), iodata()) -> iodata().
 wrap_lines(<<>>, _, Acc) ->
@@ -47,4 +42,3 @@ fold(Bin, LineSize, Acc) ->
     [P1] ->
       {lists:reverse([[$\s, P1] | Acc]), <<>>}
   end.
-

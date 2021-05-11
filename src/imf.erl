@@ -112,7 +112,10 @@ encode_field({message_id, Value}, Acc) ->
 encode_field({in_reply_to, Value}, Acc) ->
   [["In-Reply-To: ", imf_message_id:encode(Value)] | Acc];
 encode_field({references, Value}, Acc) ->
-  [["References: ", imf_message_id:encode(Value)] | Acc].
+  [["References: ", imf_message_id:encode(Value)] | Acc];
+encode_field({subject, Value}, Acc) ->
+  Prepend = byte_size(<<"Subject: ">>),
+  [["Subject: ", imf_unstructured_field:encode(Value, Prepend)] | Acc].
 
 foo() ->
   Mail = #{header =>
@@ -128,6 +131,7 @@ foo() ->
                             [{mailbox, #{address => <<"group1@example.com">>}},
                              {mailbox, #{address => <<"group2@example.com">>}}]}}]},
               {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
+              {subject, <<"mon super subject">>},
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},

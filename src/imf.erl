@@ -35,7 +35,8 @@
       | destination_address_field()
       | identification_field()
       | informational_field()
-      | resent_field().
+      | resent_field()
+      | optional_field().
 
 -type origination_date_field() :: {date, date()}.
 
@@ -67,6 +68,8 @@
       | {resent_cc, [address()]}
       | {resent_bcc, [address()]}
       | {resent_msg_id, msg_id()}.
+
+-type optional_field() :: {binary(), unstructured()}.
 
 -type unstructured() :: binary().
 
@@ -134,7 +137,10 @@ encode_field({resent_cc, Value}, Acc) ->
 encode_field({resent_bcc, _}, Acc) ->
   Acc;
 encode_field({resent_message_id, Value}, Acc) ->
-  [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc].
+  [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc];
+encode_field({Name, Value}, Acc) ->
+  Prepend = byte_size(Name) + 1,
+  [[Name, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].
 
 foo() ->
   Mail = #{header =>

@@ -16,7 +16,7 @@
 
 -export_type([message/0, header/0, body/0]).
 
--export_type([header_field/0, origination_date_field/0, originator_field/0,
+-export_type([field/0, origination_date_field/0, originator_field/0,
               destination_address_field/0, identification_field/0,
               informational_field/0, resent_field/0]).
 
@@ -24,9 +24,9 @@
 
 -type message() :: #{header := header(), body := body()}.
 
--type header() :: [header_field()].
+-type header() :: [field()].
 
--type header_field() ::
+-type field() ::
         origination_date_field()
       | originator_field()
       | destination_address_field()

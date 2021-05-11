@@ -53,7 +53,7 @@ timezone_offset(Datetime) ->
   case calendar:datetime_to_gregorian_seconds(Datetime) -
     calendar:datetime_to_gregorian_seconds(UniversalDatetime) of
     DiffSec when DiffSec < 0 ->
-      io_lib:format("-~4..0w", [trunc(abs(DiffSec))]);
+      io_lib:format("-~4..0w", [trunc(abs((DiffSec / 3600) * 100))]);
     DiffSec ->
-      io_lib:format("+~4..0w", [trunc(abs(DiffSec))])
+      io_lib:format("+~4..0w", [trunc(abs((DiffSec / 3600) * 100))])
   end.

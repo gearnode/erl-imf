@@ -18,4 +18,4 @@
 
 -spec encode([imf:phrase()]) -> iodata().
 encode(Phases) ->
-  [lists:join(",\r\n", Phases), "\r\n"].
+  [lists:join(",\r\n ", Phases), "\r\n"].

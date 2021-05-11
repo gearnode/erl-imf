@@ -1,6 +1,6 @@
 # Introduction
-This repository contains an Erlang library designed to handle email
-generation and parsing.
+This repository contains an Erlang library designed to handle internet
+message format generation and parsing.
 
 # Capabilities
 -  Internet Message Format - [RFC

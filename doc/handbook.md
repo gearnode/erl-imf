@@ -1,15 +1,15 @@
 # Introduction
-This document contains development notes about the `email` library.
+This document contains development notes about the `imf` library.
 
 # Versioning
-The following `email` versions are available:
+The following `imf` versions are available:
 - `0.y.z` unstable versions.
-- `x.y.z` stable versions: `email` will maintain reasonable backward
+- `x.y.z` stable versions: `imf` will maintain reasonable backward
   compatibility, deprecating features before removing them.
 - Experimental untagged versions.
 
 Developers who use unstable or experimental versions are responsible for
-updating their application when `email` is modified. Note that
+updating their application when `imf` is modified. Note that
 unstable versions can be modified without backward compatibility at any
 time.
 

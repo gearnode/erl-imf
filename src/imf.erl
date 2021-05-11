@@ -56,7 +56,7 @@
 
 -type informational_field() ::
         {subject, unstructured()}
-      | {comment, unstructured()}
+      | {comments, unstructured()}
       | {keywords, [phrase()]}.
 
 -type resent_field() ::
@@ -114,8 +114,11 @@ encode_field({in_reply_to, Value}, Acc) ->
 encode_field({references, Value}, Acc) ->
   [["References: ", imf_message_id:encode(Value)] | Acc];
 encode_field({subject, Value}, Acc) ->
-  Prepend = byte_size(<<"Subject: ">>),
-  [["Subject: ", imf_unstructured_field:encode(Value, Prepend)] | Acc].
+  Prepend = byte_size(<<"Subject:">>),
+  [["Subject:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
+encode_field({comments, Value}, Acc) ->
+  Prepend = byte_size(<<"Comments:">>),
+  [["Comments:", imf_unstructured_field:encode(Value, Prepend)] | Acc].
 
 foo() ->
   Mail = #{header =>
@@ -132,6 +135,7 @@ foo() ->
                              {mailbox, #{address => <<"group2@example.com">>}}]}}]},
               {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
               {subject, <<"mon super subject">>},
+              {comments, <<"my comment about this message">>},
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},

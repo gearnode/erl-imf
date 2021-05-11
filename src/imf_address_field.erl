@@ -27,6 +27,6 @@ encode({mailbox, #{address := Address}}, Acc) ->
   [Address | Acc];
 encode({group, #{name := Name, addresses := Addresses}}, Acc) ->
   Data = lists:join(",\r\n ", lists:foldl(fun encode/2, [], Addresses)),
-  [[Name, ":", Data] | Acc];
+  [[Name, ":", Data, ";"] | Acc];
 encode({group, #{name := Name}}, Acc) ->
   [[Name, ":", ";"] | Acc].

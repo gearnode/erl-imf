@@ -118,7 +118,9 @@ encode_field({subject, Value}, Acc) ->
   [["Subject:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
 encode_field({comments, Value}, Acc) ->
   Prepend = byte_size(<<"Comments:">>),
-  [["Comments:", imf_unstructured_field:encode(Value, Prepend)] | Acc].
+  [["Comments:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
+encode_field({keywords, Value}, Acc) ->
+  [["Keywords: ", imf_phrase_field:encode(Value)] | Acc].
 
 foo() ->
   Mail = #{header =>
@@ -136,6 +138,7 @@ foo() ->
               {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
               {subject, <<"mon super subject">>},
               {comments, <<"my comment about this message">>},
+              {keywords, [<<"a">>, <<"b">>, <<"c">>]},
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},

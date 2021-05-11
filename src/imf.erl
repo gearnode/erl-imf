@@ -117,11 +117,9 @@ encode_field({in_reply_to, Value}, Acc) ->
 encode_field({references, Value}, Acc) ->
   [["References: ", imf_message_id_field:encode(Value)] | Acc];
 encode_field({subject, Value}, Acc) ->
-  Prepend = byte_size(<<"Subject:">>),
-  [["Subject:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
+  [["Subject:", imf_unstructured_field:encode(Value, 8)] | Acc];
 encode_field({comments, Value}, Acc) ->
-  Prepend = byte_size(<<"Comments:">>),
-  [["Comments:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
+  [["Comments:", imf_unstructured_field:encode(Value, 9)] | Acc];
 encode_field({keywords, Value}, Acc) ->
   [["Keywords: ", imf_phrase_field:encode(Value)] | Acc];
 encode_field({resent_date, Value}, Acc) ->

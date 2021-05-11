@@ -36,6 +36,7 @@
       | identification_field()
       | informational_field()
       | resent_field()
+      | trace_field()
       | optional_field().
 
 -type origination_date_field() :: {date, date()}.
@@ -68,6 +69,11 @@
       | {resent_cc, [address()]}
       | {resent_bcc, [address()]}
       | {resent_msg_id, msg_id()}.
+
+-type trace_field() ::
+        {return_path, none | binary()}
+      | {received, #{data := binary(), date := date()}}.
+
 
 -type optional_field() :: {binary(), unstructured()}.
 
@@ -136,6 +142,10 @@ encode_field({resent_bcc, _}, Acc) ->
   Acc;
 encode_field({resent_message_id, Value}, Acc) ->
   [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc];
+encode_field({return_path, none}, Acc) ->
+  [["Return-Path: <>"] | Acc];
+encode_field({return_path, AngleAddr}, Acc) ->
+  [["Return-Path: <", AngleAddr, ">"] | Acc];
 encode_field({Name, Value}, Acc) ->
   Prepend = byte_size(Name) + 1,
   [[Name, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].
@@ -157,7 +167,12 @@ foo() ->
               {subject, <<"mon super subject">>},
               {comments, <<"my comment about this message">>},
               {keywords, [<<"a">>, <<"b">>, <<"c">>]},
+              {return_path, <<"people@example.com">>},
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},
-  io:format("~p~n", [iolist_to_binary(encode(Mail))]).
+  %% io:format("~p~n", [iolist_to_binary(encode(Mail))]).
+  encode(Mail).
+
+%% [CFWS] "<" addr-spec ">" [CFWS]
+%% angle-addr / ([CFWS] "<" [CFWS] ">" [CFWS])

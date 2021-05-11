@@ -18,7 +18,7 @@
 
 -spec encode(binary(), iodata()) -> iodata().
 encode(Name, Value) ->
-  [Name, $:, $\s, Value].
+  [Name, $:, $\s, Value, $\r, $\n].
 
 -spec format_datetime() -> iodata().
 format_datetime() ->

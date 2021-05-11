@@ -108,11 +108,11 @@ encode_field({cc, Value}, Acc) ->
 encode_field({bcc, _}, Acc) ->
   Acc;
 encode_field({message_id, Value}, Acc) ->
-  [["Message-ID: ", imf_message_id:encode([Value])] | Acc];
+  [["Message-ID: ", imf_message_id_field:encode([Value])] | Acc];
 encode_field({in_reply_to, Value}, Acc) ->
-  [["In-Reply-To: ", imf_message_id:encode(Value)] | Acc];
+  [["In-Reply-To: ", imf_message_id_field:encode(Value)] | Acc];
 encode_field({references, Value}, Acc) ->
-  [["References: ", imf_message_id:encode(Value)] | Acc];
+  [["References: ", imf_message_id_field:encode(Value)] | Acc];
 encode_field({subject, Value}, Acc) ->
   Prepend = byte_size(<<"Subject:">>),
   [["Subject:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
@@ -120,7 +120,21 @@ encode_field({comments, Value}, Acc) ->
   Prepend = byte_size(<<"Comments:">>),
   [["Comments:", imf_unstructured_field:encode(Value, Prepend)] | Acc];
 encode_field({keywords, Value}, Acc) ->
-  [["Keywords: ", imf_phrase_field:encode(Value)] | Acc].
+  [["Keywords: ", imf_phrase_field:encode(Value)] | Acc];
+encode_field({resent_date, Value}, Acc) ->
+  [["Resent-Date: ", imf_date_field:encode(Value)] | Acc];
+encode_field({resent_from, Value}, Acc) ->
+  [["Resent-From: ", imf_address_field:encode(Value)] | Acc];
+encode_field({resent_sender, [Value]}, Acc) ->
+  [["Resent-Sender: ", imf_address_field:encode(Value)] | Acc];
+encode_field({resent_to, Value}, Acc) ->
+  [["Resent-To: ", imf_address_field:encode(Value)] | Acc];
+encode_field({resent_cc, Value}, Acc) ->
+  [["Resent-Cc: ", imf_address_field:encode(Value)] | Acc];
+encode_field({resent_bcc, _}, Acc) ->
+  Acc;
+encode_field({resent_message_id, Value}, Acc) ->
+  [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc].
 
 foo() ->
   Mail = #{header =>

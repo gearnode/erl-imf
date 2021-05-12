@@ -14,7 +14,7 @@
 
 -module(imf).
 
--export([encode/1, foo/0]).
+-export([encode/1, qencode/1, foo/0]).
 
 -export_type([message/0, header/0, body/0]).
 
@@ -92,6 +92,23 @@
 -type date() :: {localtime, calendar:datetime()}.
 
 -type body() :: iodata().
+
+-spec qencode(binary(), iodata()) -> iodata().
+qencode(Bin) ->
+  ["=?UTF-8?Q?", qencode(Bin, []), "?="].
+
+-spec qencode(binary()) -> iodata().
+qencode(<<C, Rest/binary>>, Acc) when C =:= $\s ->
+  qencode(Rest, [$_ | Acc]);
+qencode(<<C, Rest/binary>>, Acc) when C > $\s, C =< $~,
+                                      C =/= $_,
+                                      C =/= $=,
+                                      C =/= $! ->
+  qencode(Rest, [C | Acc]);
+qencode(<<>>, Acc) ->
+  lists:reverse(Acc);
+qencode(<<C, Rest/binary>>, Acc) ->
+  qencode(Rest, [[$=, hex:encode(<<C>>)] | Acc]).
 
 -spec encode(message()) -> iodata().
 encode(#{header := Header, body := _}) ->

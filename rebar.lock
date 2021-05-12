@@ -1,1 +1,4 @@
-[].
+[{<<"hex">>,
+  {git,"https://github.com/exograd/erl-hex.git",
+       {ref,"e9dd521a16f69ad25502932088818d3857a4f632"}},
+  0}].

@@ -71,7 +71,7 @@
       | {resent_msg_id, msg_id()}.
 
 -type trace_field() ::
-        {return_path, none | binary()}
+        {return_path, binary()}
       | {received, #{data := binary(), date := date()}}.
 
 
@@ -142,8 +142,6 @@ encode_field({resent_bcc, _}, Acc) ->
   Acc;
 encode_field({resent_message_id, Value}, Acc) ->
   [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc];
-encode_field({return_path, none}, Acc) ->
-  [["Return-Path: <>"] | Acc];
 encode_field({return_path, AngleAddr}, Acc) ->
   [["Return-Path: <", AngleAddr, ">"] | Acc];
 encode_field({Name, Value}, Acc) ->

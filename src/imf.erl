@@ -143,7 +143,7 @@ encode_field({resent_bcc, _}, Acc) ->
 encode_field({resent_message_id, Value}, Acc) ->
   [["Resent-Message-ID: ", imf_message_id_field:encode([Value])] | Acc];
 encode_field({return_path, AngleAddr}, Acc) ->
-  [["Return-Path: <", AngleAddr, ">"] | Acc];
+  [["Return-Path: <", AngleAddr, ">", "\r\n"] | Acc];
 encode_field({Name, Value}, Acc) ->
   Prepend = byte_size(Name) + 1,
   [[Name, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].

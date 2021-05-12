@@ -72,7 +72,7 @@
 
 -type trace_field() ::
         {return_path, binary()}
-      | {received, #{data := binary(), date := date()}}.
+      | {received, binary()}.
 
 
 -type optional_field() :: {binary(), unstructured()}.

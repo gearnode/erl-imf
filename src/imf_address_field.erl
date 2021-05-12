@@ -18,7 +18,8 @@
 
 -spec encode([imf:address()]) -> iodata().
 encode(Addresses) ->
-  lists:join(",\r\n ", lists:foldl(fun encode/2, [], Addresses)) ++ "\r\n".
+  Encoded = lists:reverse(lists:foldl(fun encode/2, [], Addresses)),
+  [lists:join(",\r\n ", Encoded), "\r\n"].
 
 -spec encode(imf:address(), iodata()) -> iodata().
 encode({mailbox, #{name := Name, address := Address}}, Acc) ->

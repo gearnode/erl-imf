@@ -99,7 +99,7 @@ encode(#{header := Header, body := _}) ->
 
 -spec encode_header(header()) -> iodata().
 encode_header(Fields) ->
-  lists:foldl(fun encode_field/2, [], Fields).
+  lists:reverse(lists:foldl(fun encode_field/2, [], Fields)).
 
 -spec encode_field(field(), iodata()) -> iodata().
 encode_field({date, Value}, Acc) ->

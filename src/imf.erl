@@ -241,7 +241,7 @@ foo() ->
               {reply_to,
                [{mailbox, #{address => <<"foo@example.com">>}},
                 {group, #{name => <<"Mon super\"\ngroup">>}},
-                {group, #{name => <<"Mon super group">>,
+                {group, #{name => <<"Mon ( @@   super group">>,
                           addresses =>
                             [{mailbox, #{address => <<"group1@example.com">>}},
                              {mailbox, #{address => <<"group2@example.com">>}}]}}]},

@@ -23,11 +23,11 @@ encode(Addresses) ->
 
 -spec encode(imf:address(), iodata()) -> iodata().
 encode({mailbox, #{name := Name, address := Address}}, Acc) ->
-  [[$", Name, $", $\s, $<, Address, $>] | Acc];
+  [[imf:quote(Name), $\s, $<, Address, $>] | Acc];
 encode({mailbox, #{address := Address}}, Acc) ->
   [Address | Acc];
 encode({group, #{name := Name, addresses := Addresses}}, Acc) ->
   Data = lists:join(",\r\n ", lists:foldl(fun encode/2, [], Addresses)),
-  [[$", Name, $", ":", Data, ";"] | Acc];
+  [[imf:quote(Name), ":", Data, ";"] | Acc];
 encode({group, #{name := Name}}, Acc) ->
-  [[$", Name, $", ":", ";"] | Acc].
+  [[imf:quote(Name), ":", ";"] | Acc].

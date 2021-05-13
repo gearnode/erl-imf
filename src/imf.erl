@@ -14,7 +14,7 @@
 
 -module(imf).
 
--export([encode/1, qencode/1, foo/0]).
+-export([quote/1, encode/1, foo/0]).
 
 -export_type([message/0, header/0, body/0]).
 
@@ -93,22 +93,25 @@
 
 -type body() :: iodata().
 
--spec qencode(binary(), iodata()) -> iodata().
-qencode(Bin) ->
-  ["=?UTF-8?Q?", qencode(Bin, []), "?="].
+-spec quote(binary()) -> binary().
+quote(Bin) ->
+  case should_be_quote(Bin) of
+    true -> <<$", Bin/binary, $">>;
+    false -> Bin
+  end.
 
--spec qencode(binary()) -> iodata().
-qencode(<<C, Rest/binary>>, Acc) when C =:= $\s ->
-  qencode(Rest, [$_ | Acc]);
-qencode(<<C, Rest/binary>>, Acc) when C > $\s, C =< $~,
-                                      C =/= $_,
-                                      C =/= $=,
-                                      C =/= $! ->
-  qencode(Rest, [C | Acc]);
-qencode(<<>>, Acc) ->
-  lists:reverse(Acc);
-qencode(<<C, Rest/binary>>, Acc) ->
-  qencode(Rest, [[$=, hex:encode(<<C>>)] | Acc]).
+-spec should_be_quote(binary()) -> boolean().
+should_be_quote(<<>>) ->
+  false;
+should_be_quote(<<C, Rest/binary>>)
+  when C >= $a, C =< $z; C >= $A, C =< $Z; C >= $0, C =< $9;
+       C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
+       C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
+       C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
+       C =:= $~; C =:= $\s ->
+  should_be_quote(Rest);
+should_be_quote(_) ->
+  true.
 
 -spec encode(message()) -> iodata().
 encode(#{header := Header, body := _}) ->

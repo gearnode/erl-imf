@@ -23,22 +23,4 @@ encode(Phrases) ->
 
 -spec encode(imf:phrase(), iodata()) -> iodata().
 encode(Phrase, Acc) ->
-  case should_be_quote(Phrase) of
-    true ->
-      [[$", Phrase, $"] | Acc];
-    false ->
-      [Phrase | Acc]
-  end.
-
--spec should_be_quote(binary()) -> boolean().
-should_be_quote(<<>>) ->
-  false;
-should_be_quote(<<C, Rest/binary>>)
-  when C >= $a, C =< $z; C >= $A, C =< $Z; C >= $0, C =< $9;
-       C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
-       C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
-       C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
-       C =:= $~; C =:= $\s ->
-  should_be_quote(Rest);
-should_be_quote(_) ->
-  true.
+  [imf:quote(Phrase) | Acc].

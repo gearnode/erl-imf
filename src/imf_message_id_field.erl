@@ -18,7 +18,7 @@
 
 -spec encode([imf:msg_id()]) -> iodata().
 encode(MessageIds) ->
-  [lists:join(" ", lists:foldl(fun encode/2, [], MessageIds)), "\r\n"].
+  [lists:join("\r\n ", lists:foldl(fun encode/2, [], MessageIds)), "\r\n"].
 
 -spec encode(imf:msg_id(), iodata()) -> iodata().
 encode({Left, Right}, Acc) ->

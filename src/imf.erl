@@ -173,7 +173,7 @@ encode_field({Name, Value}, Acc) ->
 foo() ->
   Mail = #{header =>
              [{from,
-               [{mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}},
+               [{mailbox, #{name => <<"Bryan F.">>, address => <<"bryan@frimin.fr">>}},
                 {mailbox, #{address => <<"bryan@example.com">>}}]},
               {sender,
                {mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}}},
@@ -184,10 +184,17 @@ foo() ->
                             [{mailbox, #{address => <<"group1@example.com">>}},
                              {mailbox, #{address => <<"group2@example.com">>}}]}}]},
               {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
+              {references,
+               [{<<"123">>, <<"workstation.frimin.fr">>},
+                {<<"456">>, <<"workstation.frimin.fr">>},
+                {<<"789">>, <<"workstation.frimin.fr">>}]},
               {subject, <<"mon super subject">>},
               {comments, <<"my comment about this message">>},
-              {keywords, [<<"a">>, <<"b">>, <<"c">>]},
-              {return_path, <<"people@example.com">>},
+              {keywords, [<<"a.b[]">>, <<"b">>, <<"c">>]},
+              {return_path, <<"people@example.com">>}, 
+              {<<"Mime-Version">>, <<"1.0">>},
+              {<<"Content-Type">>, <<"text/plain">>},
+              {<<"Content-Transfer-Encoding">>, <<"7bit">>},
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},

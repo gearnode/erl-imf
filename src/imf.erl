@@ -14,7 +14,12 @@
 
 -module(imf).
 
--export([quote/1, encode/1, foo/0]).
+-include_lib("kernel/include/inet.hrl").
+
+-export([quote/1,
+         encode/1,
+         generate_message_id/0, generate_message_id/1,
+         foo/0]).
 
 -export_type([message/0, header/0, body/0]).
 
@@ -113,6 +118,26 @@ should_be_quote(<<C, Rest/binary>>)
 should_be_quote(_) ->
   true.
 
+-spec generate_message_id() -> msg_id().
+generate_message_id() ->
+  generate_message_id(fqdn()).
+
+-spec generate_message_id(binary()) -> msg_id().
+generate_message_id(FQDN) ->
+  {ksuid:generate(), FQDN}.
+
+-spec fqdn() -> binary().
+fqdn() ->
+  {ok, Hostname} = inet:gethostname(),
+  case inet:gethostbyname(Hostname) of
+    {ok, #hostent{h_name = FQDN}} when is_atom(FQDN) ->
+      atom_to_binary(FQDN);
+    {ok, #hostent{h_name = FQDN}} when is_list(FQDN) ->
+      iolist_to_binary(FQDN);
+    {error, _} ->
+      <<"localhost">>
+  end.
+
 -spec encode(message()) -> iodata().
 encode(#{header := Header, body := _}) ->
   encode_header(Header).
@@ -184,7 +209,7 @@ foo() ->
                           addresses =>
                             [{mailbox, #{address => <<"group1@example.com">>}},
                              {mailbox, #{address => <<"group2@example.com">>}}]}}]},
-              {message_id, {<<"123">>, <<"workstation.frimin.fr">>}},
+              {message_id, generate_message_id()},
               {references,
                [{<<"123">>, <<"workstation.frimin.fr">>},
                 {<<"456">>, <<"workstation.frimin.fr">>},

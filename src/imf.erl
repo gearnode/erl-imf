@@ -231,7 +231,8 @@ encode_field({Name, Value}, Acc) ->
 
 foo() ->
   Mail = #{header =>
-             [{from,
+             [{date, {localtime, calendar:local_time()}},
+              {from,
                [{mailbox, #{name => <<"Bryan F.">>, address => <<"bryan@frimin.fr">>}},
                 {mailbox, #{address => <<"bryan@example.com">>}}]},
               {sender,
@@ -239,6 +240,7 @@ foo() ->
               {reply_to,
                [{mailbox, #{address => <<"foo@example.com">>}},
                 {group, #{name => <<"Mon super\"\ngroup">>}},
+                {mailbox, #{name => <<"People 1">>, address => <<"people1@example.com">>}},
                 {group, #{name => <<"Mon ( @@   super group">>,
                           addresses =>
                             [{mailbox, #{address => <<"group1@example.com">>}},
@@ -254,8 +256,7 @@ foo() ->
               {return_path, <<"people@example.com">>}, 
               {<<"Mime-Version">>, <<"1.0">>},
               {<<"Content-Type">>, <<"text/plain">>},
-              {<<"Content-Transfer-Encoding">>, <<"7bit">>},
-              {date, {localtime, calendar:local_time()}}],
+              {<<"Content-Transfer-Encoding">>, <<"7bit">>}],
            body =>
              <<"hello world">>},
   encode(Mail).

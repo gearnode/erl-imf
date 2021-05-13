@@ -227,12 +227,12 @@ foo() ->
   Mail = #{header =>
              [{from,
                [{mailbox, #{name => <<"Bryan F.">>, address => <<"bryan@frimin.fr">>}},
-                {mailbox, #{address => <<"bryan>@example.com">>}}]},
+                {mailbox, #{address => <<"bryan@example.com">>}}]},
               {sender,
                {mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}}},
               {reply_to,
                [{mailbox, #{address => <<"foo@example.com">>}},
-                {group, #{name => <<"Mon super] group">>}},
+                {group, #{name => <<"Mon super\"\ngroup">>}},
                 {group, #{name => <<"Mon super group">>,
                           addresses =>
                             [{mailbox, #{address => <<"group1@example.com">>}},
@@ -242,7 +242,7 @@ foo() ->
                [{<<"123">>, <<"workstation.frimin.fr">>},
                 {<<"456">>, <<"workstation.frimin.fr">>},
                 {<<"789">>, <<"workstation.frimin.fr">>}]},
-              {subject, <<"mon super subject">>},
+              {subject, <<"mon super ( subject">>},
               {comments, <<"my comment about this message">>},
               {keywords, [<<"a.b[]">>, <<"b">>, <<"c">>]},
               {return_path, <<"people@example.com">>}, 

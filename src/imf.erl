@@ -16,7 +16,7 @@
 
 -include_lib("kernel/include/inet.hrl").
 
--export([quote/1,
+-export([quote/2,
          encode/1,
          generate_message_id/0, generate_message_id/1,
          foo/0]).
@@ -98,24 +98,31 @@
 
 -type body() :: iodata().
 
--spec quote(binary()) -> binary().
-quote(Bin) ->
-  case should_be_quote(Bin) of
+-spec quote(binary(), atom | dotatom) -> binary().
+quote(Bin, Type) ->
+  case should_be_quote(Bin, Type) of
     true -> <<$", Bin/binary, $">>;
     false -> Bin
   end.
 
--spec should_be_quote(binary()) -> boolean().
-should_be_quote(<<>>) ->
+-spec should_be_quote(binary(), atom | dotatom) -> boolean().
+should_be_quote(<<>>, _) ->
   false;
-should_be_quote(<<C, Rest/binary>>)
+should_be_quote(<<C, Rest/binary>>, atom)
   when C >= $a, C =< $z; C >= $A, C =< $Z; C >= $0, C =< $9;
        C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
        C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
        C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
        C =:= $~; C =:= $\s ->
-  should_be_quote(Rest);
-should_be_quote(_) ->
+  should_be_quote(Rest, atom);
+should_be_quote(<<C, Rest/binary>>, dotatom)
+  when C >= $a, C =< $z; C >= $A, C =< $Z; C >= $0, C =< $9;
+       C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
+       C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
+       C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
+       C =:= $~; C =:= $\s; C =:= $. ->
+  should_be_quote(Rest, dotatom);
+should_be_quote(_, _) ->
   true.
 
 -spec generate_message_id() -> msg_id().
@@ -199,7 +206,7 @@ foo() ->
   Mail = #{header =>
              [{from,
                [{mailbox, #{name => <<"Bryan F.">>, address => <<"bryan@frimin.fr">>}},
-                {mailbox, #{address => <<"bryan@example.com">>}}]},
+                {mailbox, #{address => <<"bryan>@example.com">>}}]},
               {sender,
                {mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}}},
               {reply_to,

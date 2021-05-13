@@ -23,4 +23,4 @@ encode(Phrases) ->
 
 -spec encode(imf:phrase(), iodata()) -> iodata().
 encode(Phrase, Acc) ->
-  [imf:quote(Phrase) | Acc].
+  [imf:quote(Phrase, atom) | Acc].

@@ -101,8 +101,8 @@
 -spec quote(binary(), atom | dotatom) -> binary().
 quote(Bin, Type) ->
   case should_be_quote(Bin, Type) of
-    true -> <<$", Bin/binary, $">>;
-    false -> Bin
+    true -> <<$", (escape(Bin))/binary, $">>;
+    false -> escape(Bin)
   end.
 
 -spec should_be_quote(binary(), atom | dotatom) -> boolean().
@@ -124,6 +124,28 @@ should_be_quote(<<C, Rest/binary>>, dotatom)
   should_be_quote(Rest, dotatom);
 should_be_quote(_, _) ->
   true.
+
+-spec escape(binary()) -> binary().
+escape(Bin) ->
+  escape(Bin, <<>>).
+
+-spec escape(binary(), binary()) -> binary().
+escape(<<>>, Acc) ->
+  Acc;
+escape(<<$\b, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $b>>);
+escape(<<$\f, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $f>>);
+escape(<<$\r, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $r>>);
+escape(<<$\n, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $n>>);
+escape(<<$\t, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $t>>);
+escape(<<$", Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $">>);
+escape(<<C, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, C>>).
 
 -spec generate_message_id() -> msg_id().
 generate_message_id() ->

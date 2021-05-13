@@ -179,6 +179,7 @@ foo() ->
                {mailbox, #{name => <<"Bryan Frimin">>, address => <<"bryan@frimin.fr">>}}},
               {reply_to,
                [{mailbox, #{address => <<"foo@example.com">>}},
+                {group, #{name => <<"Mon super] group">>}},
                 {group, #{name => <<"Mon super group">>,
                           addresses =>
                             [{mailbox, #{address => <<"group1@example.com">>}},

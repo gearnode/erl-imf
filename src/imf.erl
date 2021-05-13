@@ -131,20 +131,28 @@ escape(Bin) ->
 -spec escape(binary(), binary()) -> binary().
 escape(<<>>, Acc) ->
   Acc;
+escape(<<$\0, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $0>>);
+escape(<<$\a, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $a>>);
 escape(<<$\b, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $b>>);
+escape(<<$\t, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $\t>>);
+escape(<<$\n, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $n>>);
+escape(<<$\v, Rest/binary>>, Acc) ->
+  escape(Rest, <<Acc/binary, $\\, $v>>);
 escape(<<$\f, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $f>>);
 escape(<<$\r, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $r>>);
-escape(<<$\n, Rest/binary>>, Acc) ->
-  escape(Rest, <<Acc/binary, $\\, $n>>);
-escape(<<$\t, Rest/binary>>, Acc) ->
-  escape(Rest, <<Acc/binary, $\\, $t>>);
-escape(<<$", Rest/binary>>, Acc) ->
-  escape(Rest, <<Acc/binary, $\\, $">>);
+escape(<<C, Rest/binary>>, Acc) when C =:= $!;
+                                     C >= $#, C =< $[;
+                                     C >= $], C =< $~ ->
+  escape(Rest, <<Acc/binary, C>>);
 escape(<<C, Rest/binary>>, Acc) ->
-  escape(Rest, <<Acc/binary, C>>).
+  escape(Rest, <<Acc/binary, $\\, C>>).
 
 -spec generate_message_id() -> msg_id().
 generate_message_id() ->

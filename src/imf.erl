@@ -79,7 +79,6 @@
         {return_path, binary()}
       | {received, binary()}.
 
-
 -type optional_field() :: {binary(), unstructured()}.
 
 -type unstructured() :: binary().

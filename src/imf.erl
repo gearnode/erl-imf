@@ -133,8 +133,6 @@ escape(<<>>, Acc) ->
   Acc;
 escape(<<$\0, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $0>>);
-escape(<<$\a, Rest/binary>>, Acc) ->
-  escape(Rest, <<Acc/binary, $\\, $a>>);
 escape(<<$\b, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $b>>);
 escape(<<$\t, Rest/binary>>, Acc) ->

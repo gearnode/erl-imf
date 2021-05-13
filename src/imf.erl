@@ -260,8 +260,4 @@ foo() ->
               {date, {localtime, calendar:local_time()}}],
            body =>
              <<"hello world">>},
-  %% io:format("~p~n", [iolist_to_binary(encode(Mail))]).
   encode(Mail).
-
-%% [CFWS] "<" addr-spec ">" [CFWS]
-%% angle-addr / ([CFWS] "<" [CFWS] ">" [CFWS])

@@ -18,7 +18,7 @@
 
 -type encoding() :: ascii | latin1 | utf8.
 
--spec qencode(binary(), iodata()) -> binary().
+-spec qencode(binary()) -> binary().
 qencode(Bin) ->
   case heuristic_encoding_bin(Bin) of
     ascii ->
@@ -28,7 +28,9 @@ qencode(Bin) ->
       iolist_to_binary(Data)
   end.
 
--spec qencode(binary()) -> iodata().
+-spec qencode(binary(), iodata()) -> iodata().
+qencode(<<>>, Acc) ->
+  lists:reverse(Acc);
 qencode(<<C, Rest/binary>>, Acc) when C =:= $\s ->
   qencode(Rest, [$_ | Acc]);
 qencode(<<C, Rest/binary>>, Acc) when C > $\s, C =< $~,
@@ -36,8 +38,6 @@ qencode(<<C, Rest/binary>>, Acc) when C > $\s, C =< $~,
                                       C =/= $=,
                                       C =/= $! ->
   qencode(Rest, [C | Acc]);
-qencode(<<>>, Acc) ->
-  lists:reverse(Acc);
 qencode(<<C, Rest/binary>>, Acc) ->
   qencode(Rest, [[$=, hex:encode(<<C>>, [uppercase])] | Acc]).
 

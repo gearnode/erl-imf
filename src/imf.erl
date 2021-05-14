@@ -235,7 +235,7 @@ foo() ->
         [{date, {localtime, calendar:local_time()}},
          {from,
           [{mailbox,
-            #{name => <<"Bryan F.">>, address => <<"bryan@frimin.fr">>}},
+            #{name => <<"Bryan F. été">>, address => <<"bryan@frimin.fr">>}},
            {mailbox, #{address => <<"bryan@example.com">>}}]},
          {sender,
           {mailbox,
@@ -245,7 +245,7 @@ foo() ->
            {group, #{name => <<"Mon super\"\ngroup">>}},
            {mailbox,
             #{name => <<"People 1">>, address => <<"people1@example.com">>}},
-           {group, #{name => <<"Mon ( @@   super group">>,
+           {group, #{name => <<"Mon super group d'été"/utf8>>,
                      addresses =>
                        [{mailbox, #{address => <<"group1@example.com">>}},
                         {mailbox, #{address => <<"group2@example.com">>}}]}}]},

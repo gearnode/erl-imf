@@ -112,14 +112,14 @@ should_be_quote(<<C, Rest/binary>>, atom)
        C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
        C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
        C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
-       C =:= $~; C =:= $\s ->
+       C =:= $~ ->
   should_be_quote(Rest, atom);
 should_be_quote(<<C, Rest/binary>>, dotatom)
   when C >= $a, C =< $z; C >= $A, C =< $Z; C >= $0, C =< $9;
        C =:= $!; C =:= $#; C =:= $$; C =:= $%; C =:= $&; C =:= $';
        C =:= $*; C =:= $+; C =:= $-; C =:= $/; C =:= $=; C =:= $?;
        C =:= $^; C =:= $_; C =:= $`; C =:= ${; C =:= $}; C =:= $|;
-       C =:= $~; C =:= $\s; C =:= $. ->
+       C =:= $~; C =:= $. ->
   should_be_quote(Rest, dotatom);
 should_be_quote(_, _) ->
   true.
@@ -145,7 +145,7 @@ escape(<<$\f, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $f>>);
 escape(<<$\r, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $r>>);
-escape(<<C, Rest/binary>>, Acc) when C =:= $!; C =:= $\s;
+escape(<<C, Rest/binary>>, Acc) when C =:= $!;
                                      C >= $#, C =< $[;
                                      C >= $], C =< $~ ->
   escape(Rest, <<Acc/binary, C>>);

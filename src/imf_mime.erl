@@ -22,10 +22,32 @@
 qencode(Bin) ->
   case heuristic_encoding_bin(Bin) of
     ascii ->
-      Bin;
-    Encoding ->
-      Data = ["=?", encoding_name(Encoding), "?Q?", qencode(Bin, []), "?="],
-      iolist_to_binary(Data)
+      imf:quote(Bin, atom); %% TODO: take care about dot atom
+    utf8 ->
+      qencode(Bin, utf8, fun string:length/1, fun string:slice/3, []);
+    latin1 ->
+      qencode(Bin, latin1, fun erlang:byte_size/1, fun binary:part/3, [])
+  end.
+
+-spec qencode(binary(), encoding(), term(), term(), iodata()) -> binary().
+qencode(<<>>, _, _, _, Acc) ->
+  iolist_to_binary(lists:join(" ", lists:reverse(Acc)));
+qencode(Bin, Encoding, SizeF, SliceF, Acc) ->
+  EncodingName = encoding_name(Encoding),
+  {EncodedWord, Rest} =
+    qencode_1(Bin, EncodingName, SizeF, SliceF),
+  qencode(Rest, Encoding, SizeF, SliceF, [EncodedWord | Acc]).
+
+-spec qencode_1(binary(), binary(), term(), term()) -> {iodata(), binary()}.
+qencode_1(Bin, EncodingName, SizeF, SliceF) ->
+  CurSize = 2 + byte_size(EncodingName) + 3 + 2,
+  case CurSize + SizeF(Bin) of
+    N when N =< 75 ->
+      {["=?", EncodingName, "?Q?", qencode(Bin, []), "?="], <<>>};
+    _ ->
+      P1 = SliceF(Bin, 0, 75 - CurSize),
+      P2 = SliceF(Bin, 75 - CurSize, SizeF(Bin) - (75 - CurSize)),
+      {["=?", EncodingName, "?Q?", qencode(P1, []), "?="], P2}
   end.
 
 -spec qencode(binary(), iodata()) -> iodata().

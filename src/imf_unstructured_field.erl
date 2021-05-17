@@ -18,7 +18,7 @@
 
 -spec encode(imf:unstructured(), pos_integer()) -> iodata().
 encode(Value, Prepend) ->
-  wrap_lines(Value, Prepend, []).
+  wrap_lines(imf_mime:qencode(Value), Prepend, []).
 
 -spec wrap_lines(binary(), non_neg_integer(), iodata()) -> iodata().
 wrap_lines(<<>>, _, Acc) ->

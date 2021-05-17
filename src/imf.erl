@@ -145,7 +145,7 @@ escape(<<$\f, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $f>>);
 escape(<<$\r, Rest/binary>>, Acc) ->
   escape(Rest, <<Acc/binary, $\\, $r>>);
-escape(<<C, Rest/binary>>, Acc) when C =:= $!;
+escape(<<C, Rest/binary>>, Acc) when C =:= $!; C =:= $\s;
                                      C >= $#, C =< $[;
                                      C >= $], C =< $~ ->
   escape(Rest, <<Acc/binary, C>>);

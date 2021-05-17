@@ -42,7 +42,8 @@
       | informational_field()
       | resent_field()
       | trace_field()
-      | optional_field().
+      | optional_field()
+      | mime_field().
 
 -type origination_date_field() :: {date, date()}.
 
@@ -78,6 +79,9 @@
 -type trace_field() ::
         {return_path, binary()}
       | {received, binary()}.
+
+-type mime_field() ::
+        {mime_version, float()}.
 
 -type optional_field() :: {binary(), unstructured()}.
 
@@ -225,6 +229,8 @@ encode_field({return_path, AngleAddr}, Acc) ->
   [["Return-Path: <", AngleAddr, ">", "\r\n"] | Acc];
 encode_field({received, Value}, Acc) ->
   [["Received: ", Value, "\r\n"] | Acc];
+encode_field({mime_version, Value}, Acc) ->
+  [["Mime-Version: ", io_lib:format("~.1f", [Value]), "\r\n"] | Acc];
 encode_field({Name, Value}, Acc) ->
   Prepend = byte_size(Name) + 1,
   [[Name, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].

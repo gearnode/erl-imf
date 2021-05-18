@@ -22,5 +22,10 @@ encode(Phrases) ->
   [lists:join(",\r\n ", Encoded), "\r\n"].
 
 -spec encode(imf:phrase(), iodata()) -> iodata().
-encode(Phrase, Acc) ->
-  [imf:quote(Phrase, atom) | Acc].
+encode(Bin, Acc) ->
+  case imf_qencode:encode(Bin) of
+    Bin ->
+      [imf:quote(Bin, atom) | Acc];
+    Encoded ->
+      [Encoded | Acc]
+  end.

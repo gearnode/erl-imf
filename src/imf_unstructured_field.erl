@@ -17,8 +17,13 @@
 -export([encode/2]).
 
 -spec encode(imf:unstructured(), pos_integer()) -> iodata().
-encode(Value, Prepend) ->
-  wrap_lines(imf_mime:qencode(Value), Prepend, []).
+encode(Bin, Prepend) ->
+  case imf_qencode:encode(Bin) of
+    Bin ->
+      wrap_lines(imf:quote(Bin, atom), Prepend, []);
+    Encoded ->
+      wrap_lines(Encoded, Prepend, [])
+  end.
 
 -spec wrap_lines(binary(), non_neg_integer(), iodata()) -> iodata().
 wrap_lines(<<>>, _, Acc) ->

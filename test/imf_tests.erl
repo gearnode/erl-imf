@@ -48,3 +48,187 @@ encode_test_() ->
                    {localtime, {{2021,5,21},{14,47,17}}}}],
                body => <<>>})),
 
+   %% From header field
+   ?_assertEqual(
+      <<"From: JohnDoe <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{name => <<"JohnDoe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: \"John Doe\" <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{name => <<"John Doe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: john.doe@example.com\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{name => <<"John Doé">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{name => <<"John Doé"/utf8>>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: Group1:;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group, #{name => <<"Group1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: \"Group 1\":;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group, #{name => <<"Group 1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group, #{name => <<"Group d'été">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group, #{name => <<"Group d'été"/utf8>>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: Group1:\"John Doe\" <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doe">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n Person1 <person1@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n \"Person.1\" <person1@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{group,
+                     #{name => <<"Group d'été"/utf8>>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person.1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: person1@example.com,\r\n person2@example.com,\r\n person3@example.com\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox, #{address => <<"person1@example.com">>}},
+                    {mailbox, #{address => <<"person2@example.com">>}},
+                    {mailbox, #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"From: \"Person 1\" <person1@example.com>,\r\n \"Group 1\":;,\r\n \"Person 2\" <person2@example.com>,\r\n person3@example.com\r\n">>,
+      encode(#{header =>
+                 [{from,
+                   [{mailbox,
+                     #{name => <<"Person 1">>,
+                       address => <<"person1@example.com">>}},
+                    {group,
+                     #{name => <<"Group 1">>}},
+                    {mailbox,
+                     #{name => <<"Person 2">>,
+                       address => <<"person2@example.com">>}},
+                    {mailbox,
+                     #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),

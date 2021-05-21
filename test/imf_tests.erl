@@ -232,3 +232,40 @@ encode_test_() ->
                     {mailbox,
                      #{address => <<"person3@example.com">>}}]}],
                body => <<>>})),
+
+   %% Sender header field
+   ?_assertEqual(
+      <<"Sender: \"John Doe\" <john.doe.example.com>\r\n">>,
+      encode(#{header =>
+                 [{sender,
+                   {mailbox,
+                    #{name => <<"John Doe">>,
+                      address => <<"john.doe.example.com">>}}}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Sender: =?ISO-8859-1?Q?John_Do=E9?= <john.doe.example.com>\r\n">>,
+      encode(#{header =>
+                 [{sender,
+                   {mailbox,
+                    #{name => <<"John Doé">>,
+                      address => <<"john.doe.example.com">>}}}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Sender: =?UTF-8?Q?John_Do=C3=A9?= <john.doe.example.com>\r\n">>,
+      encode(#{header =>
+                 [{sender,
+                   {mailbox,
+                    #{name => <<"John Doé"/utf8>>,
+                      address => <<"john.doe.example.com">>}}}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Sender: john.doe.example.com\r\n">>,
+      encode(#{header =>
+                 [{sender,
+                   {mailbox,
+                    #{address => <<"john.doe.example.com">>}}}],
+               body => <<>>}))
+].

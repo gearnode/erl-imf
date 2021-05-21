@@ -31,3 +31,20 @@ quote_test_() ->
                  imf:quote(<<"hello.world">>, dotatom)),
    ?_assertEqual(<<"\"hello\\\\world\"">>,
                  imf:quote(<<"hello\\world">>, atom))].
+
+encode(Mail) ->
+  iolist_to_binary(imf:encode(Mail)).
+
+encode_test_() ->
+  [?_assertEqual(
+      <<>>,
+      encode(#{header => [], body => <<>>})),
+
+   %% Date header field
+   ?_assertEqual(
+      <<"Date: Fri, 21 May 2021 14:47:17 +0200\r\n">>,
+      encode(#{header =>
+                 [{date,
+                   {localtime, {{2021,5,21},{14,47,17}}}}],
+               body => <<>>})),
+

@@ -32,7 +32,9 @@ encode({mailbox, #{name := Name, address := Address}}, Acc) ->
 encode({mailbox, #{address := Address}}, Acc) ->
   [Address | Acc];
 encode({group, #{name := Name, addresses := Addresses}}, Acc) ->
-  Data = lists:join(",\r\n ", lists:foldl(fun encode/2, [], Addresses)),
+  Data = lists:join(",\r\n ",
+                    lists:reverse(
+                      lists:foldl(fun encode/2, [], Addresses))),
   case imf_qencode:encode(Name) of
     Name ->
       [[imf:quote(Name, atom), ":", Data, ";"] | Acc];

@@ -267,5 +267,4 @@ encode_test_() ->
                  [{sender,
                    {mailbox,
                     #{address => <<"john.doe.example.com">>}}}],
-               body => <<>>}))
-].
+               body => <<>>}))].

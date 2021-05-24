@@ -2000,6 +2000,13 @@ encode_test_() ->
                  [{resent_message_id, {<<"123">>, <<"imf.example.com">>}}],
                body => <<>>})),
 
+   %% Return-Path header field
+   ?_assertEqual(
+      <<"Return-Path: <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{return_path, <<"john.doe@example.com">>}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

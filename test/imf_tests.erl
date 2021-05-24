@@ -1009,7 +1009,7 @@ encode_test_() ->
                      #{address => <<"person3@example.com">>}}]}],
                body => <<>>})),
 
-   % Message-ID header field
+   %% Message-ID header field
    ?_assertEqual(
       <<"Message-ID: <123@imf.example.com>\r\n">>,
       encode(#{header =>
@@ -1025,7 +1025,7 @@ encode_test_() ->
                     {<<"456">>, <<"example.com">>}]}],
                body => <<>>})),
 
-   % References header field
+   %% References header field
    ?_assertEqual(
       <<"References: <123@example.com>\r\n <456@example.com>\r\n">>,
      encode(#{header =>

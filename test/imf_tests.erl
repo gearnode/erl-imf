@@ -54,7 +54,7 @@ encode_test_() ->
 
    %% Date header field
    ?_assertEqual(
-      <<"Date: Fri, 21 May 2021 14:47:17 +0200\r\n">>,
+      <<"Date: Fri, 21 May 2021 14:47:17 -0400\r\n">>,
       encode(#{header =>
                  [{date,
                    {localtime, {{2021,5,21},{14,47,17}}}}],

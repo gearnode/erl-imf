@@ -26,10 +26,10 @@ shell:
 	QUIET=1 rebar3 shell --config config/local.config
 
 test:
-	QUIET=1 rebar3 eunit
+	QUIET=1 TZ="America/New_York" rebar3 eunit
 
 cover:
-	QUIET=1 rebar3 eunit --cover
+	QUIET=1 TZ="America/New_York" rebar3 eunit --cover
 	QUIET=1 rebar3 cover
 
 clean:

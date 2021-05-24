@@ -1142,6 +1142,37 @@ encode_test_() ->
 
    %% Keywords header field
    ?_assertEqual(
-      <<>>,
-      encode(#{}))
-].
+      <<"Keywords: \r\n">>,
+      encode(#{header =>
+                 [{keywords, []}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Keywords: tag1\r\n">>,
+      encode(#{header =>
+                 [{keywords, [<<"tag1">>]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Keywords: tag1,\r\n"
+        " tag2,\r\n"
+        " tag3\r\n">>,
+      encode(#{header =>
+                 [{keywords, [<<"tag1">>, <<"tag2">>, <<"tag3">>]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Keywords: \"tag 1\",\r\n"
+        " \"tag\\\"2\",\r\n"
+        " tag3\r\n">>,
+      encode(#{header =>
+                 [{keywords, [<<"tag 1">>, <<"tag\"2">>, <<"tag3">>]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Keywords: \"tag 1\",\r\n"
+        " =?ISO-8859-1?Q?=E9t=E9?=,\r\n"
+        " =?UTF-8?Q?=C3=A9t=C3=A9?=\r\n">>,
+      encode(#{header =>
+                 [{keywords, [<<"tag 1">>, <<"été">>, <<"été"/utf8>>]}],
+               body => <<>>}))].

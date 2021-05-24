@@ -1016,6 +1016,15 @@ encode_test_() ->
                  [{message_id, {<<"123">>, <<"imf.example.com">>}}],
                body => <<>>})),
 
+   %% In-Reply-To header field
+   ?_assertEqual(
+      <<"In-Reply-To: <123@example.com>\r\n <456@example.com>\r\n">>,
+      encode(#{header =>
+                 [{in_reply_to,
+                   [{<<"123">>, <<"example.com">>},
+                    {<<"456">>, <<"example.com">>}]}],
+               body => <<>>})),
+
    % References header field
    ?_assertEqual(
       <<"References: <123@example.com>\r\n <456@example.com>\r\n">>,

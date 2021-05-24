@@ -1993,6 +1993,13 @@ encode_test_() ->
                      #{address => <<"person3@example.com">>}}]}],
                body => <<>>})),
 
+   %% Resent-Message-ID header field
+   ?_assertEqual(
+      <<"Resent-Message-ID: <123@imf.example.com>\r\n">>,
+      encode(#{header =>
+                 [{resent_message_id, {<<"123">>, <<"imf.example.com">>}}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

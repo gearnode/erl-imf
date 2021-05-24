@@ -30,7 +30,19 @@ quote_test_() ->
    ?_assertEqual(<<"hello.world">>,
                  imf:quote(<<"hello.world">>, dotatom)),
    ?_assertEqual(<<"\"hello\\\\world\"">>,
-                 imf:quote(<<"hello\\world">>, atom))].
+                 imf:quote(<<"hello\\world">>, atom)),
+   ?_assertEqual(<<"\"\\0\"">>,
+                 imf:quote(<<$\0>>, atom)),
+   ?_assertEqual(<<"\"\\b\"">>,
+                 imf:quote(<<$\b>>, atom)),
+   ?_assertEqual(<<"\"\\t\"">>,
+                 imf:quote(<<$\t>>, atom)),
+   ?_assertEqual(<<"\"\\v\"">>,
+                 imf:quote(<<$\v>>, atom)),
+   ?_assertEqual(<<"\"\\f\"">>,
+                 imf:quote(<<$\f>>, atom)),
+   ?_assertEqual(<<"\"\\r\"">>,
+                 imf:quote(<<$\r>>, atom))].
 
 encode(Mail) ->
   iolist_to_binary(imf:encode(Mail)).

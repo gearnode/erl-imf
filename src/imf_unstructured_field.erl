@@ -19,6 +19,8 @@
 -spec encode(imf:unstructured(), pos_integer()) -> iodata().
 encode(Bin, Prepend) ->
   case imf_qencode:encode(Bin) of
+    <<>> ->
+      [" \r\n"];
     Bin ->
       wrap_lines(imf:quote(Bin, atom), Prepend, []);
     Encoded ->

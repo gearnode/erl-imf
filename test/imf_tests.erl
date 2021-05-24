@@ -1076,6 +1076,18 @@ encode_test_() ->
 
    %% Subject
    ?_assertEqual(
+      <<"Subject: \r\n">>,
+      encode(#{header =>
+                 [{subject, <<>>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Subject: \" \"\r\n">>,
+      encode(#{header =>
+                 [{subject, <<" ">>}],
+               body => <<>>})),
+
+   ?_assertEqual(
       <<"Subject: \"hello world\"\r\n">>,
       encode(#{header =>
                  [{subject, <<"hello world">>}],

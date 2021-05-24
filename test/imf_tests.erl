@@ -1014,5 +1014,14 @@ encode_test_() ->
       <<"Message-ID: <123@imf.example.com>\r\n">>,
       encode(#{header =>
                  [{message_id, {<<"123">>, <<"imf.example.com">>}}],
-               body => <<>>}))
+               body => <<>>})),
+
+   % References header field
+   ?_assertEqual(
+      <<"References: <123@example.com>\r\n <456@example.com>\r\n">>,
+     encode(#{header =>
+                [{references,
+                  [{<<"123">>, <<"example.com">>},
+                   {<<"456">>, <<"example.com">>}]}],
+              body => <<>>}))
 ].

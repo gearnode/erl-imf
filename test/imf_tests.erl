@@ -1808,6 +1808,191 @@ encode_test_() ->
                      #{address => <<"person3@example.com">>}}]}],
                body => <<>>})),
 
+   %% Resent-Bcc header field
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{name => <<"JohnDoe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{name => <<"John Doe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{name => <<"John Doé">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{name => <<"John Doé"/utf8>>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group, #{name => <<"Group1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group, #{name => <<"Group 1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group, #{name => <<"Group d'été">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group, #{name => <<"Group d'été"/utf8>>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doe">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{group,
+                     #{name => <<"Group d'été"/utf8>>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person.1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox, #{address => <<"person1@example.com">>}},
+                    {mailbox, #{address => <<"person2@example.com">>}},
+                    {mailbox, #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<>>,
+      encode(#{header =>
+                 [{resent_bcc,
+                   [{mailbox,
+                     #{name => <<"Person 1">>,
+                       address => <<"person1@example.com">>}},
+                    {group,
+                     #{name => <<"Group 1">>}},
+                    {mailbox,
+                     #{name => <<"Person 2">>,
+                       address => <<"person2@example.com">>}},
+                    {mailbox,
+                     #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

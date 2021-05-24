@@ -214,8 +214,8 @@ encode_field({resent_date, Value}, Acc) ->
   [["Resent-Date: ", imf_date_field:encode(Value)] | Acc];
 encode_field({resent_from, Value}, Acc) ->
   [["Resent-From: ", imf_address_field:encode(Value)] | Acc];
-encode_field({resent_sender, [Value]}, Acc) ->
-  [["Resent-Sender: ", imf_address_field:encode(Value)] | Acc];
+encode_field({resent_sender, Value}, Acc) ->
+  [["Resent-Sender: ", imf_address_field:encode([Value])] | Acc];
 encode_field({resent_to, Value}, Acc) ->
   [["Resent-To: ", imf_address_field:encode(Value)] | Acc];
 encode_field({resent_cc, Value}, Acc) ->

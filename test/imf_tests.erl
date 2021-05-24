@@ -1189,6 +1189,13 @@ encode_test_() ->
                  [{keywords, [<<"tag 1">>, <<"été">>, <<"été"/utf8>>]}],
                body => <<>>})),
 
+   %% Resent-Date header field
+   ?_assertEqual(
+      <<"Resent-Date: Mon, 24 May 2021 13:20:35 -0400\r\n">>,
+      encode(#{header =>
+                 [{resent_date, {localtime, {{2021,5,24},{13,20,35}}}}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

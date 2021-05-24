@@ -1007,5 +1007,12 @@ encode_test_() ->
                        address => <<"person2@example.com">>}},
                     {mailbox,
                      #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
+   % Message-ID header field
+   ?_assertEqual(
+      <<"Message-ID: <123@imf.example.com>\r\n">>,
+      encode(#{header =>
+                 [{message_id, {<<"123">>, <<"imf.example.com">>}}],
                body => <<>>}))
 ].

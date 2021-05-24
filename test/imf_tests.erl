@@ -1063,5 +1063,42 @@ encode_test_() ->
       <<"Subject: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?= =?UTF-8?Q?_long_=21?=\r\n">>,
       encode(#{header =>
                  [{subject, <<"Une journée d'été c'est long, vraiment très long... non mais genre vraiment très très  très long !"/utf8>>}],
+               body => <<>>})),
+
+   %% Comments header field
+   ?_assertEqual(
+      <<"Comments: whaooooooooouuuuuu\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"whaooooooooouuuuuu">>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Comments: \"my comment\"\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"my comment">>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Comments: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"Une journée d'été">>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Comments: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"Une journée d'été"/utf8>>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Comments: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"Une journée d'été c'est long, vraiment très long... non mais genre vraiment très très  très long !">>}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Comments: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?= =?UTF-8?Q?_long_=21?=\r\n">>,
+      encode(#{header =>
+                 [{comments, <<"Une journée d'été c'est long, vraiment très long... non mais genre vraiment très très  très long !"/utf8>>}],
                body => <<>>}))
 ].

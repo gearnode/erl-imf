@@ -1616,6 +1616,198 @@ encode_test_() ->
                      #{address => <<"person3@example.com">>}}]}],
                body => <<>>})),
 
+   %% Resent-Cc header field
+   ?_assertEqual(
+      <<"Resent-Cc: JohnDoe <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{name => <<"JohnDoe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: \"John Doe\" <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{name => <<"John Doe">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: john.doe@example.com\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{name => <<"John Doé">>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{name => <<"John Doé"/utf8>>,
+                       address => <<"john.doe@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: Group1:;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group, #{name => <<"Group1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: \"Group 1\":;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group, #{name => <<"Group 1">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group, #{name => <<"Group d'été">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group, #{name => <<"Group d'été"/utf8>>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: Group1:\"John Doe\" <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doe">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé">>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group1">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{name => <<"John Doé"/utf8>>,
+                             address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
+        " Person1 <person1@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group d'été">>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
+        " \"Person.1\" <person1@example.com>;\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{group,
+                     #{name => <<"Group d'été"/utf8>>,
+                       addresses =>
+                         [{mailbox,
+                           #{address => <<"john.doe@example.com">>}},
+                          {mailbox,
+                           #{name => <<"Person.1">>,
+                             address => <<"person1@example.com">>}}]}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: person1@example.com,\r\n"
+        " person2@example.com,\r\n"
+        " person3@example.com\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox, #{address => <<"person1@example.com">>}},
+                    {mailbox, #{address => <<"person2@example.com">>}},
+                    {mailbox, #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Resent-Cc: \"Person 1\" <person1@example.com>,\r\n"
+        " \"Group 1\":;,\r\n"
+        " \"Person 2\" <person2@example.com>,\r\n"
+        " person3@example.com\r\n">>,
+      encode(#{header =>
+                 [{resent_cc,
+                   [{mailbox,
+                     #{name => <<"Person 1">>,
+                       address => <<"person1@example.com">>}},
+                    {group,
+                     #{name => <<"Group 1">>}},
+                    {mailbox,
+                     #{name => <<"Person 2">>,
+                       address => <<"person2@example.com">>}},
+                    {mailbox,
+                     #{address => <<"person3@example.com">>}}]}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

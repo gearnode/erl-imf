@@ -24,10 +24,10 @@
 
 -export_type([field/0, origination_date_field/0, originator_field/0,
               destination_address_field/0, identification_field/0,
-              informational_field/0, resent_field/0]).
+              informational_field/0, resent_field/0, mime_field/0]).
 
 -export_type([unstructured/0, msg_id/0, address/0, mailbox/0, group/0,
-              phrase/0, date/0]).
+              phrase/0, date/0, mime_version/0]).
 
 -type message() :: #{header := header(), body := body()}.
 
@@ -80,7 +80,9 @@
       | {received, binary()}.
 
 -type mime_field() ::
-        {mime_version, float()}.
+        {mime_version, mime_version()}.
+
+-type mime_version() :: {non_neg_integer(), non_neg_integer()}.
 
 -type optional_field() :: {binary(), unstructured()}.
 
@@ -229,7 +231,7 @@ encode_field({return_path, AngleAddr}, Acc) ->
 encode_field({received, Value}, Acc) ->
   [["Received: ", Value, "\r\n"] | Acc]; 
 encode_field({mime_version, Value}, Acc) ->
-  [["Mime-Version: ", io_lib:format("~.1f", [Value]), "\r\n"] | Acc];
+  [["Mime-Version: ", imf_mime:encode_version(Value), "\r\n"] | Acc];
 encode_field({Name, Value}, Acc) ->
   Prepend = byte_size(Name) + 1,
   [[Name, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].

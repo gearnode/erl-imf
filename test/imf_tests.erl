@@ -2019,6 +2019,19 @@ encode_test_() ->
                  [{return_path, <<"john.doe@example.com">>}],
                body => <<>>})),
 
+   %% Mime-Version header field
+   ?_assertEqual(
+      <<"Mime-Version: 1.0\r\n">>,
+      encode(#{header =>
+                 [{mime_version, {1,0}}],
+               body => <<>>})),
+
+   ?_assertEqual(
+      <<"Mime-Version: 3.2\r\n">>,
+      encode(#{header =>
+                 [{mime_version, {3,2}}],
+               body => <<>>})),
+
    %% Custom header field
    ?_assertEqual(
      <<"X-Internal-Field: hello\r\n">>,

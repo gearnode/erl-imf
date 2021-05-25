@@ -57,15 +57,20 @@ encode_version({Major, Minor}) ->
 
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Fields}) ->
-  lists:reverse(lists:foldl(fun encode_field/2, [], Fields)).
+  Data = lists:reverse(lists:foldl(fun encode_field/2, [], Fields)),
+  Data.
 
 -spec encode_field(field(), iodata()) -> iodata().
+encode_field({content_type, MediaType}, Acc) ->
+  [["Content-Type: ", encode_media_type(MediaType), "\r\n"] | Acc];
 encode_field({content_transfer_encoding, Mechanism}, Acc) ->
-  [["Content-Transfer-Encoding: ", encode_mechanism(Mechanism)] | Acc];
+  [["Content-Transfer-Encoding: ", encode_mechanism(Mechanism), "\r\n"] | Acc];
 encode_field({content_id, Id}, Acc) ->
-  [["Content-ID: ", imf_message_id_field:encode(Id)] | Acc];
+  [["Content-ID: ", imf_message_id_field:encode([Id])] | Acc];
 encode_field({content_description, Bin}, Acc) ->
-  [["Content-Description:", imf_unstructured_field:encode(Bin, 20)] | Acc].
+  [["Content-Description:", imf_unstructured_field:encode(Bin, 20)] | Acc];
+encode_field({Key, Value}, Acc) ->
+  [[Key, ": ", Value, "\r\n"] | Acc].
 
 -spec encode_mechanism(mechanism()) -> iodata().
 encode_mechanism('7bit') ->
@@ -78,3 +83,16 @@ encode_mechanism(quoted_printable) ->
   "quoted-printable";
 encode_mechanism(base64) ->
   "base64".
+
+-spec encode_media_type(media_type()) -> iodata().
+encode_media_type(MediaType) ->
+  Type = maps:get(type, MediaType),
+  SubType = maps:get(subtype, MediaType),
+  F = fun (K, V, A) -> <<A/binary, $;, K/binary, $=, $", V/binary, $">> end,
+  Parameters = maps:fold(F, <<>>, maps:get(parameters, MediaType, #{})),
+  case Parameters of
+    <<>> ->
+      <<Type/binary, $/, SubType/binary>>;
+    _Else ->
+      <<Type/binary, $/, SubType/binary, Parameters/binary>>
+  end.

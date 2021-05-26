@@ -13,6 +13,7 @@ message format generation and parsing.
   - [RFC 2047](https://tools.ietf.org/html/rfc2047)
   - [RFC 2048](https://tools.ietf.org/html/rfc2048)
   - [RFC 2049](https://tools.ietf.org/html/rfc2049)
+  - [RFC 2183](https://tools.ietf.org/html/rfc2183)
 
 # Build
 You can build the library with:

@@ -26,7 +26,8 @@
 -type field() :: content_type()
                | content_transfer_encoding()
                | content_id()
-               | content_description().
+               | content_description()
+               | content_disposition().
 
 -type content_type() :: {content_type, media_type()}.
 
@@ -44,6 +45,19 @@
 
 -type attribute() :: binary().
 -type value() :: binary().
+
+-type content_disposition() :: {content_disposition, disposition()}.
+
+-type disposition() :: #{type :=  disposition_type(),
+                         parameters => disposition_params()}.
+
+-type disposition_type() :: inline | attachment.
+
+-type disposition_params() :: #{filename => binary(),
+                                creation_date => calendar:datetime(),
+                                modification_date => calendar:datetime(),
+                                read_date => calendar:datetime(),
+                                size => pos_integer()}.
 
 -type text() :: binary().
 
@@ -69,6 +83,8 @@ encode_field({content_id, Id}, Acc) ->
   [["Content-ID: ", imf_message_id_field:encode([Id])] | Acc];
 encode_field({content_description, Bin}, Acc) ->
   [["Content-Description:", imf_unstructured_field:encode(Bin, 20)] | Acc];
+encode_field({content_disposition, Disposition}, Acc) ->
+  [["Content-Disposition: ", encode_content_disposition(Disposition)] | Acc];
 encode_field({Key, Value}, Acc) ->
   [[Key, ": ", Value, "\r\n"] | Acc].
 
@@ -95,4 +111,31 @@ encode_media_type(MediaType) ->
       <<Type/binary, $/, SubType/binary>>;
     _Else ->
       <<Type/binary, $/, SubType/binary, Parameters/binary>>
+  end.
+
+-spec encode_content_disposition(disposition()) -> iodata().
+encode_content_disposition(Disposition) ->
+  Type = atom_to_binary(maps:get(type, Disposition)),
+  F =
+    fun
+      (filename, Filename, Acc) ->
+        [["filename=", Filename] | Acc];
+      (creation_date, Datetime, Acc) ->
+        FormatedDT = imf_date_field:format(Datetime),
+        [["creation-date=\"", FormatedDT, "\""] | Acc];
+      (modification_date, Datetime, Acc) ->
+        FormatedDT = imf_date_field:format(Datetime),
+        [["modification-date=\"", FormatedDT, "\""] | Acc];
+      (read_date, Datetime, Acc) ->
+        FormatedDT = imf_date_field:format(Datetime),
+        [["read-date=\"", FormatedDT, "\""] | Acc];
+      (size, Size, Acc) ->
+        [["size=", integer_to_binary(Size)] | Acc]
+    end,
+  Bin = maps:fold(F, [], maps:get(parameters, Disposition, #{})),
+  Bin2 = lists:join(";\r\n ", lists:reverse(Bin)),
+
+  case iolist_size(Bin2) =:= 0 of
+    true -> [Type, "\r\n"];
+    false -> [Type, ";\r\n ", Bin2, "\r\n"]
   end.

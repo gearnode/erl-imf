@@ -14,16 +14,20 @@
 
 -module(imf_date_field).
 
--export([encode/1]).
+-export([encode/1, format/1]).
 
 -spec encode(imf:date()) -> iodata().
 encode({localtime, Value}) ->
-  {{Year, Month, Day}, {Hour, Minute, Second}} = Value,
+  [format(Value), "\r\n"].
+
+-spec format(calendar:datetime()) -> iodata().
+format(Datetime) ->
+  {{Year, Month, Day}, {Hour, Minute, Second}} = Datetime,
   DayOfTheWeek = calendar:day_of_the_week(Year, Month, Day),
   DayName = lists:nth(DayOfTheWeek, days()),
   MonthName = lists:nth(Month, months()),
-  TZOffset = timezone_offset(Value),
-  io_lib:format("~s, ~b ~s ~b ~2..0b:~2..0b:~2..0b ~s\r\n",
+  TZOffset = timezone_offset(Datetime),
+  io_lib:format("~s, ~b ~s ~b ~2..0b:~2..0b:~2..0b ~s",
                 [DayName, Day, MonthName, Year, Hour, Minute, Second,
                  TZOffset]).
 

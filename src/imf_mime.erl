@@ -23,11 +23,14 @@
 
 -type header() :: [field()].
 
--type field() :: content_type()
+-type field() :: mime_version()
+               | content_type()
                | content_transfer_encoding()
                | content_id()
                | content_description()
                | content_disposition().
+
+-type mime_version() :: {mime_version, {non_neg_integer(), non_neg_integer()}}.
 
 -type content_type() :: {content_type, media_type()}.
 
@@ -65,9 +68,9 @@
               | {part, part()}
               | {part, [part()]}.
 
--spec encode_version(imf:mime_version()) -> iodata().
-encode_version({Major, Minor}) ->
-  io_lib:format("~B.~B", [Major, Minor]).
+-spec generate_boundary_id() -> iodata().
+generate_boundary_id() ->
+  ksuid:generate().
 
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Fields}) ->
@@ -75,6 +78,8 @@ encode_part(#{header := Fields}) ->
   Data.
 
 -spec encode_field(field(), iodata()) -> iodata().
+encode_field({mime_version, {Major, Minor}}, Acc) ->
+  [["Mime-Version: ", io_lib:format("~B.~B\r\n", [Major, Minor])] | Acc];
 encode_field({content_type, MediaType}, Acc) ->
   [["Content-Type: ", encode_media_type(MediaType)] | Acc];
 encode_field({content_transfer_encoding, Mechanism}, Acc) ->

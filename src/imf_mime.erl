@@ -76,7 +76,7 @@ encode_part(#{header := Fields}) ->
 
 -spec encode_field(field(), iodata()) -> iodata().
 encode_field({content_type, MediaType}, Acc) ->
-  [["Content-Type: ", encode_media_type(MediaType), "\r\n"] | Acc];
+  [["Content-Type: ", encode_media_type(MediaType)] | Acc];
 encode_field({content_transfer_encoding, Mechanism}, Acc) ->
   [["Content-Transfer-Encoding: ", encode_mechanism(Mechanism), "\r\n"] | Acc];
 encode_field({content_id, Id}, Acc) ->
@@ -104,13 +104,15 @@ encode_mechanism(base64) ->
 encode_media_type(MediaType) ->
   Type = maps:get(type, MediaType),
   SubType = maps:get(subtype, MediaType),
-  F = fun (K, V, A) -> <<A/binary, $;, K/binary, $=, $", V/binary, $">> end,
-  Parameters = maps:fold(F, <<>>, maps:get(parameters, MediaType, #{})),
-  case Parameters of
-    <<>> ->
-      <<Type/binary, $/, SubType/binary>>;
-    _Else ->
-      <<Type/binary, $/, SubType/binary, Parameters/binary>>
+  F =
+    fun (Key, Value, Acc) ->
+        [[Key, "=\"", Value, "\""] | Acc]
+    end,
+  Bin = maps:fold(F, [], maps:get(parameters, MediaType, #{})),
+  Bin2 = lists:join("\r\n ", lists:reverse(Bin)),
+  case iolist_size(Bin2) =:= 0 of
+    true -> [Type, "/", SubType, "\r\n"];
+    false -> [Type, "/", SubType, ";\r\n ", Bin2, "\r\n"]
   end.
 
 -spec encode_content_disposition(disposition()) -> iodata().

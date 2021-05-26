@@ -14,7 +14,7 @@
 
 -module(imf_mime).
 
--export([encode_version/1, encode_part/1]).
+-export([encode_part/1, generate_boundary_id/0]).
 
 -export_type([part/0, header/0, field/0, body/0]).
 

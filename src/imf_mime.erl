@@ -73,7 +73,12 @@ encode_part(#{header := Header, body := Body}) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
   case find_content_type_boundary(Header) of
     error ->
-      [EncodedHeader, "\r\n", encode_part(Body, []), "\r\n"];
+      if
+        EncodedHeader =:= [] ->
+          [encode_part(Body, []), "\r\n"];
+        true ->
+          [EncodedHeader, "\r\n", encode_part(Body, []), "\r\n"]
+      end;
     {ok, Boundary} ->
       [EncodedHeader, "\r\n"
        "--", Boundary, "\r\n",
@@ -88,7 +93,11 @@ encode_part({part, #{header := Header, body := Body}}, Acc) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
   case find_content_type_boundary(Header) of
     error ->
-      Acc ++ [EncodedHeader, "\r\n", encode_part(Body, [])];
+      if EncodedHeader =:= [] ->
+          Acc ++ [encode_part(Body, [])];
+         true ->
+          Acc ++ [EncodedHeader, "\r\n", encode_part(Body, [])]
+      end;
     {ok, Boundary} ->
       ["--", Boundary, "\r\n",
        EncodedHeader,
@@ -103,7 +112,7 @@ encode_part([H | T], Acc) ->
 
 -spec find_content_type_boundary(header()) -> {ok, iodata()} | error.
 find_content_type_boundary(Header) ->
-  ContentType = proplists:get_value(content_type, Header),
+  ContentType = proplists:get_value(content_type, Header, #{}),
   Parameters = maps:get(parameters, ContentType, #{}),
   maps:find(<<"boundary">>, Parameters).
 

@@ -20,7 +20,6 @@
          encode/1,
          generate_message_id/0, generate_message_id/1]).
 
--export_type([message/0, header/0, body/0]).
 -export_type([message/0, header/0]).
 
 -export_type([field/0, origination_date_field/0, originator_field/0,

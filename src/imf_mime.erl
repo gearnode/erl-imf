@@ -14,12 +14,16 @@
 
 -module(imf_mime).
 
--export([encode_part/1, generate_boundary_id/0]).
+-export([encode_part/1]).
 
 -export_type([part/0, header/0, field/0, body/0]).
 
 -type part() :: #{header := header(),
                   body := body()}.
+
+-type body() :: {data, iodata()}
+              | {part, part()}
+              | [{data, iodata()} | {part, part()}].
 
 -type header() :: [field()].
 
@@ -64,18 +68,44 @@
 
 -type text() :: binary().
 
--type body() :: {data, iodata()}
-              | {part, part()}
-              | {part, [part()]}.
-
--spec generate_boundary_id() -> iodata().
-generate_boundary_id() ->
-  ksuid:generate().
-
 -spec encode_part(part()) -> iodata().
-encode_part(#{header := Fields}) ->
-  Data = lists:reverse(lists:foldl(fun encode_field/2, [], Fields)),
-  Data.
+encode_part(#{header := Header, body := Body}) ->
+  EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
+  case find_content_type_boundary(Header) of
+    error ->
+      [EncodedHeader, "\r\n", encode_part(Body, []), "\r\n"];
+    {ok, Boundary} ->
+      [EncodedHeader, "\r\n"
+       "--", Boundary, "\r\n",
+       lists:join(["\r\n--", Boundary, "\r\n"], encode_part(Body, [])), "\r\n",
+       "--", Boundary, "--\r\n"]
+  end.
+
+-spec encode_part(body(), iodata()) -> iodata().
+encode_part({data, Bin}, Acc) ->
+  Acc ++ [Bin];
+encode_part({part, #{header := Header, body := Body}}, Acc) ->
+  EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
+  case find_content_type_boundary(Header) of
+    error ->
+      Acc ++ [EncodedHeader, "\r\n", encode_part(Body, [])];
+    {ok, Boundary} ->
+      ["--", Boundary, "\r\n",
+       EncodedHeader,
+       encode_part(Body, []), "\r\n"
+       "--", Boundary, "--\r\n"]
+  end;
+encode_part([], Acc) ->
+  Acc;
+encode_part([H | T], Acc) ->
+  Acc2 = Acc ++ [encode_part(H, [])],
+  encode_part(T, Acc2).
+
+-spec find_content_type_boundary(header()) -> {ok, iodata()} | error.
+find_content_type_boundary(Header) ->
+  ContentType = proplists:get_value(content_type, Header),
+  Parameters = maps:get(parameters, ContentType, #{}),
+  maps:find(<<"boundary">>, Parameters).
 
 -spec encode_field(field(), iodata()) -> iodata().
 encode_field({mime_version, {Major, Minor}}, Acc) ->

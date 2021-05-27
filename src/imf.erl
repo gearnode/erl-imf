@@ -21,6 +21,7 @@
          generate_message_id/0, generate_message_id/1]).
 
 -export_type([message/0, header/0, body/0]).
+-export_type([message/0, header/0]).
 
 -export_type([field/0, origination_date_field/0, originator_field/0,
               destination_address_field/0, identification_field/0,
@@ -29,7 +30,7 @@
 -export_type([unstructured/0, msg_id/0, address/0, mailbox/0, group/0,
               phrase/0, date/0]).
 
--type message() :: #{header := header(), body := body()}.
+-type message() :: #{header := header(), body := imf_mime:part()}.
 
 -type header() :: [field()].
 
@@ -93,8 +94,6 @@
 -type phrase() :: binary().
 
 -type date() :: {localtime, calendar:datetime()}.
-
--type body() :: iodata().
 
 -spec quote(binary(), atom | dotatom) -> binary().
 quote(Bin, Type) ->

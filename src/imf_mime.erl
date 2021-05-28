@@ -167,14 +167,14 @@ encode_content_disposition(Disposition) ->
       (filename, Filename, Acc) ->
         [["filename=", Filename] | Acc];
       (creation_date, Datetime, Acc) ->
-        FormatedDT = imf_date_field:format(Datetime),
-        [["creation-date=\"", FormatedDT, "\""] | Acc];
+        FormattedDT = imf_date_field:format(Datetime),
+        [["creation-date=\"", FormattedDT, "\""] | Acc];
       (modification_date, Datetime, Acc) ->
-        FormatedDT = imf_date_field:format(Datetime),
-        [["modification-date=\"", FormatedDT, "\""] | Acc];
+        FormattedDT = imf_date_field:format(Datetime),
+        [["modification-date=\"", FormattedDT, "\""] | Acc];
       (read_date, Datetime, Acc) ->
-        FormatedDT = imf_date_field:format(Datetime),
-        [["read-date=\"", FormatedDT, "\""] | Acc];
+        FormattedDT = imf_date_field:format(Datetime),
+        [["read-date=\"", FormattedDT, "\""] | Acc];
       (size, Size, Acc) ->
         [["size=", integer_to_binary(Size)] | Acc]
     end,

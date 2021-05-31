@@ -130,7 +130,9 @@ encode_field({content_description, Bin}, Acc) ->
 encode_field({content_disposition, Disposition}, Acc) ->
   [["Content-Disposition: ", encode_content_disposition(Disposition)] | Acc];
 encode_field({Key, Value}, Acc) ->
-  [[Key, ": ", Value, "\r\n"] | Acc].
+  Prepend = byte_size(Key) + 1,
+  [[Key, ":", imf_unstructured_field:encode(Value, Prepend)] | Acc].
+
 
 -spec encode_mechanism(mechanism()) -> iodata().
 encode_mechanism('7bit') ->

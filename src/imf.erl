@@ -20,6 +20,8 @@
          encode/1,
          generate_message_id/0, generate_message_id/1]).
 
+-export([mailbox/1, mailbox/2, group/1, group/2]).
+
 -export_type([message/0, header/0]).
 
 -export_type([field/0, origination_date_field/0, originator_field/0,
@@ -168,6 +170,27 @@ fqdn() ->
     {error, _} ->
       <<"localhost">>
   end.
+
+-spec mailbox(binary(), binary()) -> mailbox().
+mailbox(Name, Address) ->
+  {mailbox, #{name => Name, address => Address}}.
+
+-spec mailbox(binary()) -> mailbox().
+mailbox(Address) ->
+  {mailbox, #{address => Address}}.
+
+-spec group(binary(), [{binary(), binary()} | binary()]) -> group().
+group(GroupName, Addresses) ->
+  {group,
+   #{name => GroupName,
+     addresses => lists:map(
+                    fun ({Name, Address}) -> mailbox(Name, Address);
+                        (Address) -> mailbox(Address)
+                    end, Addresses)}}.
+
+-spec group(binary()) -> group().
+group(Name) ->
+  {group, #{name => Name}}.
 
 -spec encode(message()) -> iodata().
 encode(#{header := Header, body := Body}) ->

@@ -77,6 +77,15 @@ multipart_mixed(Parts) ->
            parameters => #{<<"boundary">> => ksuid:generate()}}}],
      body => Parts}}.
 
+-spec multipart_related(body()) -> body().
+multipart_related(Parts) ->
+  {part,
+   #{header =>
+       [{content_type,
+         #{type => <<"multipart">>, subtype => <<"related">>,
+           parameters => #{<<"boundary">> => ksuid:generate()}}}],
+     body => Parts}}.
+
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Header, body := Body}) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),

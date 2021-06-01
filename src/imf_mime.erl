@@ -95,6 +95,17 @@ multipart_alternative(Parts) ->
            parameters => #{<<"boundary">> => ksuid:generate()}}}],
      body => Parts}}.
 
+-spec text_html(binary()) -> body().
+text_html(Bin) ->
+  {part,
+   #{header =>
+       [{content_type,
+         #{type => <<"text">>, subtype => <<"html">>}},
+        {content_transfer_encoding, quoted_printable},
+        {content_disposition, #{type => inline}}],
+     body =>
+       {data, Bin}}}.
+
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Header, body := Body}) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),

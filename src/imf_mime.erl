@@ -68,6 +68,10 @@
 
 -type text() :: binary().
 
+-export([multipart_mixed/1, multipart_related/1, multipart_alternative/1,
+         text_html/1, text_plain/1,
+         main_part/1]).
+
 -spec main_part(body()) -> body().
 main_part(Body) ->
   #{header =>

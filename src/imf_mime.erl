@@ -107,10 +107,12 @@ multipart_alternative(Parts) ->
 
 -spec text_html(binary()) -> body().
 text_html(Bin) ->
+  Charset = heuristic_encoding_charset(Bin),
   {part,
    #{header =>
        [{content_type,
-         #{type => <<"text">>, subtype => <<"html">>}},
+         #{type => <<"text">>, subtype => <<"html">>,
+           parameters => #{<<"charset">> => Charset}}},
         {content_transfer_encoding, quoted_printable},
         {content_disposition, #{type => inline}}],
      body =>
@@ -118,14 +120,24 @@ text_html(Bin) ->
 
 -spec text_plain(binary()) -> body().
 text_plain(Bin) ->
+  Charset = heuristic_encoding_charset(Bin),
   {part,
    #{header =>
        [{content_type,
-         #{type => <<"text">>, subtype => <<"plain">>}},
+         #{type => <<"text">>, subtype => <<"plain">>,
+           parameters => #{<<"charset">> => Charset}}},
         {content_transfer_encoding, quoted_printable},
         {content_disposition, #{type => inline}}],
      body =>
        {data, Bin}}}.
+
+-spec heuristic_encoding_charset(binary()) -> binary().
+heuristic_encoding_charset(Bin) ->
+  case imf_encode:heuristic_encoding_bin(Bin) of
+    ascii -> <<"us-ascii">>;
+    latin1 -> <<"iso-8859-1">>;
+    utf8 -> <<"utf-8">>
+  end.
 
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Header, body := Body}) ->

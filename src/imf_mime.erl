@@ -106,6 +106,17 @@ text_html(Bin) ->
      body =>
        {data, Bin}}}.
 
+-spec text_plain(binary()) -> body().
+text_plain(Bin) ->
+  {part,
+   #{header =>
+       [{content_type,
+         #{type => <<"text">>, subtype => <<"plain">>}},
+        {content_transfer_encoding, quoted_printable},
+        {content_disposition, #{type => inline}}],
+     body =>
+       {data, Bin}}}.
+
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Header, body := Body}) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),

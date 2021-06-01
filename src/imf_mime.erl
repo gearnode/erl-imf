@@ -16,6 +16,10 @@
 
 -export([encode_part/1]).
 
+-export([multipart_mixed/1, multipart_related/1, multipart_alternative/1,
+         text_html/1, text_plain/1,
+         main_part/1]).
+
 -export_type([part/0, header/0, field/0, body/0]).
 
 -type part() :: #{header := header(),
@@ -67,10 +71,6 @@
                                 size => pos_integer()}.
 
 -type text() :: binary().
-
--export([multipart_mixed/1, multipart_related/1, multipart_alternative/1,
-         text_html/1, text_plain/1,
-         main_part/1]).
 
 -spec main_part(body()) -> body().
 main_part(Body) ->

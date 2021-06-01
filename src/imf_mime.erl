@@ -68,6 +68,15 @@
 
 -type text() :: binary().
 
+-spec multipart_mixed(body()) -> body().
+multipart_mixed(Parts) ->
+  {part,
+   #{header =>
+       [{content_type,
+         #{type => <<"multipart">>, subtype => <<"mixed">>,
+           parameters => #{<<"boundary">> => ksuid:generate()}}}],
+     body => Parts}}.
+
 -spec encode_part(part()) -> iodata().
 encode_part(#{header := Header, body := Body}) ->
   EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),

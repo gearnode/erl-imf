@@ -68,6 +68,12 @@
 
 -type text() :: binary().
 
+-spec main_part(body()) -> body().
+main_part(Body) ->
+  #{header =>
+      [{mime_version, {1,0}}],
+    body => Body}.
+
 -spec multipart_mixed(body()) -> body().
 multipart_mixed(Parts) ->
   {part,

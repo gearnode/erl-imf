@@ -140,52 +140,75 @@ heuristic_encoding_charset(Bin) ->
   end.
 
 -spec encode_part(part()) -> iodata().
-encode_part(#{header := Header, body := Body}) ->
-  EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
-  case find_content_type_boundary(Header) of
-    error ->
-      if
-        EncodedHeader =:= [] ->
-          [encode_part(Body, []), "\r\n"];
-        true ->
-          [EncodedHeader, "\r\n", encode_part(Body, []), "\r\n"]
-      end;
-    {ok, Boundary} ->
-      [EncodedHeader, "\r\n"
-       "--", Boundary, "\r\n",
-       lists:join(["\r\n--", Boundary, "\r\n"], encode_part(Body, [])), "\r\n",
-       "--", Boundary, "--\r\n"]
-  end.
+encode_part(Part) ->
+  lists:reverse(encode_part({part, Part}, [])).
 
 -spec encode_part(body(), iodata()) -> iodata().
-encode_part({data, Bin}, Acc) ->
-  Acc ++ [Bin];
-encode_part({part, #{header := Header, body := Body}}, Acc) ->
-  EncodedHeader = lists:reverse(lists:foldl(fun encode_field/2, [], Header)),
+encode_part({part, #{header := Header, body := {data, Bin}}}, Acc) ->
+  EncodedHeader = encode_header(Header),
+  EncodedPart = encode_data(Header, Bin),
   case find_content_type_boundary(Header) of
     error ->
-      if EncodedHeader =:= [] ->
-          Acc ++ [encode_part(Body, [])];
-         true ->
-          Acc ++ [EncodedHeader, "\r\n", encode_part(Body, [])]
-      end;
+      [[EncodedHeader, "\r\n", EncodedPart, "\r\n"] | Acc];
     {ok, Boundary} ->
-      ["--", Boundary, "\r\n",
-       EncodedHeader,
-       encode_part(Body, []), "\r\n"
-       "--", Boundary, "--\r\n"]
+      [[EncodedHeader, "\r\n",
+        "--", Boundary, "\r\n",
+        EncodedPart, "\r\n",
+        "--", Boundary, "--\r\n"] | Acc]
+  end;
+encode_part({part, #{header := Header, body := Part}}, Acc) ->
+  EncodedHeader = encode_header(Header),
+  EncodedPart = encode_part(Part, []),
+  case find_content_type_boundary(Header) of
+    error ->
+      [[EncodedHeader, EncodedPart, "\r\n"] | Acc];
+    {ok, Boundary} ->
+      [[EncodedHeader, "\r\n",
+        "--", Boundary, "\r\n",
+        lists:join(["\r\n--", Boundary, "\r\n"], EncodedPart), "\r\n",
+        "--", Boundary, "--\r\n"] | Acc]
   end;
 encode_part([], Acc) ->
-  Acc;
-encode_part([H | T], Acc) ->
-  Acc2 = Acc ++ [encode_part(H, [])],
-  encode_part(T, Acc2).
+  lists:reverse(Acc);
+encode_part([Part | Rest], Acc) ->
+  EncodedPart = encode_part(Part, []),
+  encode_part(Rest, [[EncodedPart] | Acc]).
+
+-spec encode_data(header(), binary()) -> iodata().
+encode_data(Header, Bin) ->
+  case get_content_transfer_encoding(Header) of
+    '7bit' ->
+      [];
+    '8bit' ->
+      [];
+    binary ->
+      [];
+    quoted_printable ->
+      Charset = get_content_type_charset(Header),
+      imf_quoted_encode:encode(Bin, Charset);
+    base64 ->
+      []
+  end.
 
 -spec find_content_type_boundary(header()) -> {ok, iodata()} | error.
 find_content_type_boundary(Header) ->
   ContentType = proplists:get_value(content_type, Header, #{}),
   Parameters = maps:get(parameters, ContentType, #{}),
   maps:find(<<"boundary">>, Parameters).
+
+-spec get_content_type_charset(header()) -> {ok, binary()} | error.
+get_content_type_charset(Header) ->
+  ContentType = proplists:get_value(content_type, Header, #{}),
+  Parameters = maps:get(parameters, ContentType, #{}),
+  maps:get(<<"charset">>, Parameters, <<"US-ASCII">>).
+
+-spec get_content_transfer_encoding(header()) -> mechanism().
+get_content_transfer_encoding(Header) ->
+  proplists:get_value(content_transfer_encoding, Header, quoted_printable).
+
+-spec encode_header(header()) -> iodata().
+encode_header(Header) ->
+  lists:reverse(lists:foldl(fun encode_field/2, [], Header)).
 
 -spec encode_field(field(), iodata()) -> iodata().
 encode_field({mime_version, {Major, Minor}}, Acc) ->

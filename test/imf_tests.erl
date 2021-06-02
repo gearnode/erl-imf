@@ -50,12 +50,12 @@ encode(Mail) ->
 encode_test_() ->
   EmptyBody = #{header => [], body => {data, <<>>}},
   [?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header => [], body => EmptyBody})),
 
    %% Date header field
    ?_assertEqual(
-      <<"Date: Fri, 21 May 2021 14:47:17 -0400\r\n\r\n">>,
+      <<"Date: Fri, 21 May 2021 14:47:17 -0400\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{date,
                    {localtime, {{2021,5,21},{14,47,17}}}}],
@@ -63,7 +63,7 @@ encode_test_() ->
 
    %% From header field
    ?_assertEqual(
-      <<"From: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"From: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -72,7 +72,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"From: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -81,7 +81,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: john.doe@example.com\r\n\r\n">>,
+      <<"From: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -89,7 +89,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"From: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -98,7 +98,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"From: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -107,35 +107,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: Group1:;\r\n\r\n">>,
+      <<"From: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: \"Group 1\":;\r\n\r\n">>,
+      <<"From: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"From: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -147,7 +147,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"From: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -159,7 +159,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"From: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -171,7 +171,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -183,7 +183,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -195,7 +195,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -210,7 +210,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{group,
@@ -226,7 +226,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"From: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -238,7 +238,7 @@ encode_test_() ->
       <<"From: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{from,
                    [{mailbox,
@@ -255,7 +255,7 @@ encode_test_() ->
 
    %% Sender header field
    ?_assertEqual(
-      <<"Sender: \"John Doe\" <john.doe.example.com>\r\n\r\n">>,
+      <<"Sender: \"John Doe\" <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{sender,
                    {mailbox,
@@ -264,7 +264,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Sender: =?ISO-8859-1?Q?John_Do=E9?= <john.doe.example.com>\r\n\r\n">>,
+      <<"Sender: =?ISO-8859-1?Q?John_Do=E9?= <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{sender,
                    {mailbox,
@@ -273,7 +273,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Sender: =?UTF-8?Q?John_Do=C3=A9?= <john.doe.example.com>\r\n\r\n">>,
+      <<"Sender: =?UTF-8?Q?John_Do=C3=A9?= <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{sender,
                    {mailbox,
@@ -282,7 +282,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Sender: john.doe.example.com\r\n\r\n">>,
+      <<"Sender: john.doe.example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{sender,
                    {mailbox,
@@ -291,7 +291,7 @@ encode_test_() ->
 
    %% Reply-To header field
    ?_assertEqual(
-      <<"Reply-To: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"Reply-To: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -300,7 +300,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"Reply-To: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -309,7 +309,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: john.doe@example.com\r\n\r\n">>,
+      <<"Reply-To: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -317,7 +317,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Reply-To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -326,7 +326,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Reply-To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -335,35 +335,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: Group1:;\r\n\r\n">>,
+      <<"Reply-To: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: \"Group 1\":;\r\n\r\n">>,
+      <<"Reply-To: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"Reply-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"Reply-To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -375,7 +375,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Reply-To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -387,7 +387,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Reply-To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -399,7 +399,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -411,7 +411,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -423,7 +423,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Reply-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -438,7 +438,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Reply-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{group,
@@ -454,7 +454,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Reply-To: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -466,7 +466,7 @@ encode_test_() ->
       <<"Reply-To: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{reply_to,
                    [{mailbox,
@@ -483,7 +483,7 @@ encode_test_() ->
 
    %% To header field
    ?_assertEqual(
-      <<"To: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"To: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -492,7 +492,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"To: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -501,7 +501,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: john.doe@example.com\r\n\r\n">>,
+      <<"To: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -509,7 +509,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -518,7 +518,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -527,35 +527,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: Group1:;\r\n\r\n">>,
+      <<"To: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: \"Group 1\":;\r\n\r\n">>,
+      <<"To: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -567,7 +567,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -579,7 +579,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -591,7 +591,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -603,7 +603,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -615,7 +615,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -630,7 +630,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{group,
@@ -646,7 +646,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"To: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -658,7 +658,7 @@ encode_test_() ->
       <<"To: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{to,
                    [{mailbox,
@@ -675,7 +675,7 @@ encode_test_() ->
 
    %% Cc header field
    ?_assertEqual(
-      <<"Cc: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"Cc: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -684,7 +684,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"Cc: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -693,7 +693,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: john.doe@example.com\r\n\r\n">>,
+      <<"Cc: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -701,7 +701,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Cc: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -710,7 +710,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Cc: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -719,35 +719,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: Group1:;\r\n\r\n">>,
+      <<"Cc: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: \"Group 1\":;\r\n\r\n">>,
+      <<"Cc: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"Cc: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -759,7 +759,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Cc: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -771,7 +771,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Cc: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -783,7 +783,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -795,7 +795,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -807,7 +807,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -822,7 +822,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{group,
@@ -838,7 +838,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Cc: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -850,7 +850,7 @@ encode_test_() ->
       <<"Cc: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{cc,
                    [{mailbox,
@@ -867,7 +867,7 @@ encode_test_() ->
 
    %% Bcc header field
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -876,7 +876,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -885,7 +885,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -893,7 +893,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -902,7 +902,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -911,35 +911,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -951,7 +951,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -963,7 +963,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -975,7 +975,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -987,7 +987,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -998,7 +998,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -1012,7 +1012,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{group,
@@ -1026,7 +1026,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -1035,7 +1035,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{bcc,
                    [{mailbox,
@@ -1052,14 +1052,14 @@ encode_test_() ->
 
    %% Message-ID header field
    ?_assertEqual(
-      <<"Message-ID: <123@imf.example.com>\r\n\r\n">>,
+      <<"Message-ID: <123@imf.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{message_id, {<<"123">>, <<"imf.example.com">>}}],
                body => EmptyBody})),
 
    %% In-Reply-To header field
    ?_assertEqual(
-      <<"In-Reply-To: <123@example.com>\r\n <456@example.com>\r\n\r\n">>,
+      <<"In-Reply-To: <123@example.com>\r\n <456@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{in_reply_to,
                    [{<<"123">>, <<"example.com">>},
@@ -1068,7 +1068,7 @@ encode_test_() ->
 
    %% References header field
    ?_assertEqual(
-      <<"References: <123@example.com>\r\n <456@example.com>\r\n\r\n">>,
+      <<"References: <123@example.com>\r\n <456@example.com>\r\n\r\n\r\n">>,
      encode(#{header =>
                 [{references,
                   [{<<"123">>, <<"example.com">>},
@@ -1077,38 +1077,38 @@ encode_test_() ->
 
    %% Subject
    ?_assertEqual(
-      <<"Subject: \r\n\r\n">>,
+      <<"Subject: \r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<>>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: \" \"\r\n\r\n">>,
+      <<"Subject: \" \"\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<" ">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: \"hello world\"\r\n\r\n">>,
+      <<"Subject: \"hello world\"\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<"hello world">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n">>,
+      <<"Subject: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<"Une journée d'été">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n">>,
+      <<"Subject: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<"Une journée d'été"/utf8>>}],
                body => EmptyBody})),
 
    ?_assertEqual(
       <<"Subject: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
-        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n">>,
+        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<"Une journée d'été c'est long, vraiment très long... "
                               "non mais genre vraiment très très  très long !">>}],
@@ -1117,7 +1117,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Subject: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n"
         " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
-        " =?UTF-8?Q?_long_=21?=\r\n\r\n">>,
+        " =?UTF-8?Q?_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{subject, <<"Une journée d'été c'est long, vraiment très long... "
                               "non mais genre vraiment très très  très long !"/utf8>>}],
@@ -1125,32 +1125,32 @@ encode_test_() ->
 
    %% Comments header field
    ?_assertEqual(
-      <<"Comments: whaooooooooouuuuuu\r\n\r\n">>,
+      <<"Comments: whaooooooooouuuuuu\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"whaooooooooouuuuuu">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Comments: \"my comment\"\r\n\r\n">>,
+      <<"Comments: \"my comment\"\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"my comment">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Comments: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n">>,
+      <<"Comments: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"Une journée d'été">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Comments: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n">>,
+      <<"Comments: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"Une journée d'été"/utf8>>}],
                body => EmptyBody})),
 
    ?_assertEqual(
       <<"Comments: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
-        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n">>,
+        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"Une journée d'été c'est long, vraiment très long... "
                                "non mais genre vraiment très très  très long !">>}],
@@ -1159,7 +1159,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Comments: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n"
         " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
-        " =?UTF-8?Q?_long_=21?=\r\n\r\n">>,
+        " =?UTF-8?Q?_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"Une journée d'été c'est long, vraiment très long..."
                                " non mais genre vraiment très très  très long !"/utf8>>}],
@@ -1167,13 +1167,13 @@ encode_test_() ->
 
    %% Keywords header field
    ?_assertEqual(
-      <<"Keywords: \r\n\r\n">>,
+      <<"Keywords: \r\n\r\n\r\n">>,
       encode(#{header =>
                  [{keywords, []}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Keywords: tag1\r\n\r\n">>,
+      <<"Keywords: tag1\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{keywords, [<<"tag1">>]}],
                body => EmptyBody})),
@@ -1181,7 +1181,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Keywords: tag1,\r\n"
         " tag2,\r\n"
-        " tag3\r\n\r\n">>,
+        " tag3\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{keywords, [<<"tag1">>, <<"tag2">>, <<"tag3">>]}],
                body => EmptyBody})),
@@ -1189,7 +1189,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Keywords: \"tag 1\",\r\n"
         " \"tag\\\"2\",\r\n"
-        " tag3\r\n\r\n">>,
+        " tag3\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{keywords, [<<"tag 1">>, <<"tag\"2">>, <<"tag3">>]}],
                body => EmptyBody})),
@@ -1197,21 +1197,21 @@ encode_test_() ->
    ?_assertEqual(
       <<"Keywords: \"tag 1\",\r\n"
         " =?ISO-8859-1?Q?=E9t=E9?=,\r\n"
-        " =?UTF-8?Q?=C3=A9t=C3=A9?=\r\n\r\n">>,
+        " =?UTF-8?Q?=C3=A9t=C3=A9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{keywords, [<<"tag 1">>, <<"été">>, <<"été"/utf8>>]}],
                body => EmptyBody})),
 
    %% Resent-Date header field
    ?_assertEqual(
-      <<"Resent-Date: Mon, 24 May 2021 13:20:35 -0400\r\n\r\n">>,
+      <<"Resent-Date: Mon, 24 May 2021 13:20:35 -0400\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_date, {localtime, {{2021,5,24},{13,20,35}}}}],
                body => EmptyBody})),
 
    %% Resent-From header field
    ?_assertEqual(
-      <<"Resent-From: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-From: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1220,7 +1220,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-From: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1229,7 +1229,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: john.doe@example.com\r\n\r\n">>,
+      <<"Resent-From: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1237,7 +1237,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-From: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1246,7 +1246,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-From: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1255,35 +1255,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: Group1:;\r\n\r\n">>,
+      <<"Resent-From: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: \"Group 1\":;\r\n\r\n">>,
+      <<"Resent-From: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"Resent-From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-From: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1295,7 +1295,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-From: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1307,7 +1307,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-From: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1319,7 +1319,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1331,7 +1331,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1343,7 +1343,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-From: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1358,7 +1358,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-From: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{group,
@@ -1374,7 +1374,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Resent-From: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -1386,7 +1386,7 @@ encode_test_() ->
       <<"Resent-From: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_from,
                    [{mailbox,
@@ -1403,7 +1403,7 @@ encode_test_() ->
 
    %% Resent-Sender header field
    ?_assertEqual(
-      <<"Resent-Sender: \"John Doe\" <john.doe.example.com>\r\n\r\n">>,
+      <<"Resent-Sender: \"John Doe\" <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_sender,
                    {mailbox,
@@ -1412,7 +1412,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Sender: =?ISO-8859-1?Q?John_Do=E9?= <john.doe.example.com>\r\n\r\n">>,
+      <<"Resent-Sender: =?ISO-8859-1?Q?John_Do=E9?= <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_sender,
                    {mailbox,
@@ -1421,7 +1421,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Sender: =?UTF-8?Q?John_Do=C3=A9?= <john.doe.example.com>\r\n\r\n">>,
+      <<"Resent-Sender: =?UTF-8?Q?John_Do=C3=A9?= <john.doe.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_sender,
                    {mailbox,
@@ -1430,7 +1430,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Sender: john.doe.example.com\r\n\r\n">>,
+      <<"Resent-Sender: john.doe.example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_sender,
                    {mailbox,
@@ -1439,7 +1439,7 @@ encode_test_() ->
 
    %% Resent-To header field
    ?_assertEqual(
-      <<"Resent-To: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-To: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1448,7 +1448,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-To: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1457,7 +1457,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: john.doe@example.com\r\n\r\n">>,
+      <<"Resent-To: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1465,7 +1465,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-To: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1474,7 +1474,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-To: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1483,35 +1483,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: Group1:;\r\n\r\n">>,
+      <<"Resent-To: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: \"Group 1\":;\r\n\r\n">>,
+      <<"Resent-To: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"Resent-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-To: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1523,7 +1523,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-To: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1535,7 +1535,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-To: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1547,7 +1547,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1559,7 +1559,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1571,7 +1571,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-To: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1586,7 +1586,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-To: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{group,
@@ -1602,7 +1602,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Resent-To: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -1614,7 +1614,7 @@ encode_test_() ->
       <<"Resent-To: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_to,
                    [{mailbox,
@@ -1631,7 +1631,7 @@ encode_test_() ->
 
    %% Resent-Cc header field
    ?_assertEqual(
-      <<"Resent-Cc: JohnDoe <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-Cc: JohnDoe <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1640,7 +1640,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: \"John Doe\" <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-Cc: \"John Doe\" <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1649,7 +1649,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: john.doe@example.com\r\n\r\n">>,
+      <<"Resent-Cc: john.doe@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1657,7 +1657,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-Cc: =?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1666,7 +1666,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n">>,
+      <<"Resent-Cc: =?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1675,35 +1675,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: Group1:;\r\n\r\n">>,
+      <<"Resent-Cc: Group1:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: \"Group 1\":;\r\n\r\n">>,
+      <<"Resent-Cc: \"Group 1\":;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n">>,
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n">>,
+      <<"Resent-Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-Cc: Group1:\"John Doe\" <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1715,7 +1715,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-Cc: Group1:=?ISO-8859-1?Q?John_Do=E9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1727,7 +1727,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-Cc: Group1:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1739,7 +1739,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n">>,
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:=?UTF-8?Q?John_Do=C3=A9?= <john.doe@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1751,7 +1751,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n">>,
+      <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1763,7 +1763,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-Cc: =?ISO-8859-1?Q?Group_d'=E9t=E9?=:john.doe@example.com,\r\n"
-        " Person1 <person1@example.com>;\r\n\r\n">>,
+        " Person1 <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1778,7 +1778,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Resent-Cc: =?UTF-8?Q?Group_d'=C3=A9t=C3=A9?=:john.doe@example.com,\r\n"
-        " \"Person.1\" <person1@example.com>;\r\n\r\n">>,
+        " \"Person.1\" <person1@example.com>;\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{group,
@@ -1794,7 +1794,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"Resent-Cc: person1@example.com,\r\n"
         " person2@example.com,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -1806,7 +1806,7 @@ encode_test_() ->
       <<"Resent-Cc: \"Person 1\" <person1@example.com>,\r\n"
         " \"Group 1\":;,\r\n"
         " \"Person 2\" <person2@example.com>,\r\n"
-        " person3@example.com\r\n\r\n">>,
+        " person3@example.com\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_cc,
                    [{mailbox,
@@ -1823,7 +1823,7 @@ encode_test_() ->
 
    %% Resent-Bcc header field
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -1832,7 +1832,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -1841,7 +1841,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -1849,7 +1849,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -1858,7 +1858,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -1867,35 +1867,35 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group, #{name => <<"Group1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group, #{name => <<"Group 1">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group, #{name => <<"Group d'été">>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group, #{name => <<"Group d'été"/utf8>>}}]}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1907,7 +1907,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1919,7 +1919,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1931,7 +1931,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1943,7 +1943,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1954,7 +1954,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1968,7 +1968,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{group,
@@ -1982,7 +1982,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox, #{address => <<"person1@example.com">>}},
@@ -1991,7 +1991,7 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"\r\n">>,
+      <<"\r\n\r\n">>,
       encode(#{header =>
                  [{resent_bcc,
                    [{mailbox,
@@ -2008,46 +2008,46 @@ encode_test_() ->
 
    %% Resent-Message-ID header field
    ?_assertEqual(
-      <<"Resent-Message-ID: <123@imf.example.com>\r\n\r\n">>,
+      <<"Resent-Message-ID: <123@imf.example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{resent_message_id, {<<"123">>, <<"imf.example.com">>}}],
                body => EmptyBody})),
 
    %% Return-Path header field
    ?_assertEqual(
-      <<"Return-Path: <john.doe@example.com>\r\n\r\n">>,
+      <<"Return-Path: <john.doe@example.com>\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{return_path, <<"john.doe@example.com">>}],
                body => EmptyBody})),
 
    %% Custom header field
    ?_assertEqual(
-     <<"X-Internal-Field: hello\r\n\r\n">>,
+     <<"X-Internal-Field: hello\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"hello">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: \"hello world\"\r\n\r\n">>,
+      <<"X-Internal-Field: \"hello world\"\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"hello world">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n">>,
+      <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"Une journée d'été">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n">>,
+      <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"Une journée d'été"/utf8>>}],
                body => EmptyBody})),
 
    ?_assertEqual(
       <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
-        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n">>,
+        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>,
                    <<"Une journée d'été c'est long, vraiment très long..."
@@ -2057,7 +2057,7 @@ encode_test_() ->
    ?_assertEqual(
       <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n"
         " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
-        " =?UTF-8?Q?_long_=21?=\r\n\r\n">>,
+        " =?UTF-8?Q?_long_=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>,
                    <<"Une journée d'été c'est long, vraiment très long..."

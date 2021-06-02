@@ -17,11 +17,11 @@
 -export([encode/2]).
 
 -spec encode(binary(), binary()) -> binary().
-encode(Bin, <<"utf-8">>) ->
-   iolist_to_binary(encode_utf8_words(Bin, []));
-encode(Bin, <<"iso-8859-1">>) ->
-   iolist_to_binary(encode_latin1_words(Bin, []));
-encode(Bin, <<"us-ascii">>) ->
+encode(Bin, <<"UTF-8">>) ->
+  iolist_to_binary(encode_utf8_words(Bin, []));
+encode(Bin, <<"ISO-8859-1">>) ->
+  iolist_to_binary(encode_latin1_words(Bin, []));
+encode(Bin, <<"US-ASCII">>) ->
   Bin.
 
 -spec encode_utf8_words(binary(), iodata()) -> iodata().

@@ -134,9 +134,9 @@ text_plain(Bin) ->
 -spec heuristic_encoding_charset(binary()) -> binary().
 heuristic_encoding_charset(Bin) ->
   case imf_encode:heuristic_encoding_bin(Bin) of
-    ascii -> <<"us-ascii">>;
-    latin1 -> <<"iso-8859-1">>;
-    utf8 -> <<"utf-8">>
+    ascii -> <<"US-ASCII">>;
+    latin1 -> <<"ISO-8859-1">>;
+    utf8 -> <<"UTF-8">>
   end.
 
 -spec encode_part(part()) -> iodata().

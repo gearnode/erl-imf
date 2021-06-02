@@ -41,6 +41,19 @@ encode_part_test_() ->
 
    ?_assertEqual(
       <<"Content-Type: text/plain;\r\n"
+        " a=\"foo\";\r\n"
+        " b=\"bar\"\r\n"
+        "\r\n"
+        "Hello_world\r\n">>,
+      encode(#{header =>
+                 [{content_type,
+                   #{type => <<"text">>, subtype => <<"plain">>,
+                     parameters =>
+                       #{<<"a">> => <<"foo">>, <<"b">> => <<"bar">>}}}],
+               body => {data, <<"Hello world">>}})),
+
+   ?_assertEqual(
+      <<"Content-Type: text/plain;\r\n"
         " boundary=\"42\"\r\n"
         "\r\n"
         "--42\r\n"

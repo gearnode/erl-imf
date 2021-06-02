@@ -226,7 +226,7 @@ encode_media_type(MediaType) ->
         [[Key, "=\"", Value, "\""] | Acc]
     end,
   Bin = maps:fold(F, [], maps:get(parameters, MediaType, #{})),
-  Bin2 = lists:join("\r\n ", lists:reverse(Bin)),
+  Bin2 = lists:join(";\r\n ", lists:reverse(Bin)),
   case iolist_size(Bin2) =:= 0 of
     true -> [Type, "/", SubType, "\r\n"];
     false -> [Type, "/", SubType, ";\r\n ", Bin2, "\r\n"]

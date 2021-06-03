@@ -80,7 +80,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Transfer-Encoding: 7bit\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello world\r\n">>,
       encode(#{header =>
                  [{content_transfer_encoding, '7bit'}],
                body => {data, <<"Hello world">>}})),
@@ -88,24 +88,15 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Transfer-Encoding: 8bit\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello world\r\n">>,
       encode(#{header =>
                  [{content_transfer_encoding, '8bit'}],
                body => {data, <<"Hello world">>}})),
-
-   ?_assertEqual(
-      <<"Content-Transfer-Encoding: 8bit\r\n"
-        "\r\n"
-        "Hello_world\r\n">>,
-      encode(#{header =>
-                 [{content_transfer_encoding, '8bit'}],
-               body => {data, <<"Hello world">>}})),
-
 
    ?_assertEqual(
       <<"Content-Transfer-Encoding: binary\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello world\r\n">>,
       encode(#{header =>
                  [{content_transfer_encoding, binary}],
                body => {data, <<"Hello world">>}})),

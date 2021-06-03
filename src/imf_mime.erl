@@ -178,11 +178,11 @@ encode_part([Part | Rest], Acc) ->
 encode_data(Header, Bin) ->
   case get_content_transfer_encoding(Header) of
     '7bit' ->
-      [];
+      Bin;
     '8bit' ->
-      [];
+      Bin;
     binary ->
-      [];
+      Bin;
     quoted_printable ->
       Charset = get_content_type_charset(Header),
       imf_quoted_encode:encode(Bin, string:uppercase(Charset));

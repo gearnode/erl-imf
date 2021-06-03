@@ -24,7 +24,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Mime-Version: 1.0\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{mime_version, {1,0}}],
                body => {data, <<"Hello world">>}})),
@@ -33,7 +33,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Type: text/plain\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_type,
                    #{type => <<"text">>, subtype => <<"plain">>}}],
@@ -44,7 +44,7 @@ encode_part_test_() ->
         " a=\"foo\";\r\n"
         " b=\"bar\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_type,
                    #{type => <<"text">>, subtype => <<"plain">>,
@@ -57,7 +57,7 @@ encode_part_test_() ->
         " boundary=\"42\"\r\n"
         "\r\n"
         "--42\r\n"
-        "Hello_world\r\n"
+        "Hello=20world\r\n"
         "--42--\r\n">>,
       encode(#{header =>
                  [{content_type,
@@ -69,7 +69,7 @@ encode_part_test_() ->
       <<"Content-Type: text/plain;\r\n"
         " foo=\"bar\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_type,
                    #{type => <<"text">>, subtype => <<"plain">>,
@@ -132,6 +132,18 @@ encode_part_test_() ->
           imf_mime:text_plain(<<"Une journée d'été c'est long, vraiment très"
                                 "long... non mais genre vraiment très très "
                                 " très long !">>)))),
+   ?_assertEqual(
+      <<"Mime-Version: 1.0\r\n"
+        "Content-Type: text/plain;\r\n"
+        " charset=\"US-ASCII\"\r\n"
+        "Content-Transfer-Encoding: quoted-printable\r\n"
+        "Content-Disposition: inline\r\n"
+        "\r\n"
+        "Hello=20world!!\r\n"
+        "\r\n">>,
+      encode(
+        imf_mime:main_part(
+          imf_mime:text_plain(<<"Hello world!!">>)))),
 
    ?_assertEqual(
       <<"Content-Transfer-Encoding: base64\r\n"
@@ -156,7 +168,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-ID: <123@localhost>\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_id, {<<"123">>, <<"localhost">>}}],
                body => {data, <<"Hello world">>}})),
@@ -165,7 +177,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Description: \r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description, <<>>}],
                body => {data, <<"Hello world">>}})),
@@ -173,7 +185,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Description: \" \"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description, <<" ">>}],
                body => {data, <<"Hello world">>}})),
@@ -181,7 +193,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Description: \"hello world\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description, <<"hello world">>}],
                body => {data, <<"Hello world">>}})),
@@ -189,7 +201,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Description: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description, <<"Une journée d'été">>}],
                body => {data, <<"Hello world">>}})),
@@ -197,7 +209,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Description: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description, <<"Une journée d'été"/utf8>>}],
                body => {data, <<"Hello world">>}})),
@@ -206,7 +218,7 @@ encode_part_test_() ->
       <<"Content-Description: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
         " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description,
                    <<"Une journée d'été c'est long, vraiment très long... "
@@ -218,7 +230,7 @@ encode_part_test_() ->
         " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
         " =?UTF-8?Q?_long_=21?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_description,
                    <<"Une journée d'été c'est long, vraiment très long... "
@@ -229,7 +241,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Disposition: inline\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => inline}}],
@@ -238,7 +250,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Disposition: attachment\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment}}],
@@ -248,7 +260,7 @@ encode_part_test_() ->
       <<"Content-Disposition: attachment;\r\n"
         " filename=foo.pdf\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment,
@@ -259,7 +271,7 @@ encode_part_test_() ->
       <<"Content-Disposition: attachment;\r\n"
         " creation-date=\"Fri, 28 May 2021 15:18:20 -0400\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment,
@@ -271,7 +283,7 @@ encode_part_test_() ->
       <<"Content-Disposition: attachment;\r\n"
         " modification-date=\"Fri, 28 May 2021 15:18:20 -0400\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment,
@@ -283,7 +295,7 @@ encode_part_test_() ->
       <<"Content-Disposition: attachment;\r\n"
         " read-date=\"Fri, 28 May 2021 15:18:20 -0400\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment,
@@ -295,7 +307,7 @@ encode_part_test_() ->
       <<"Content-Disposition: attachment;\r\n"
         " size=100000987\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{content_disposition,
                    #{type => attachment,
@@ -307,7 +319,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"X-Internal-Field: hello\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"hello">>}],
                body => {data, <<"Hello world">>}})),
@@ -315,7 +327,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"X-Internal-Field: \"hello world\"\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"hello world">>}],
                body => {data, <<"Hello world">>}})),
@@ -323,7 +335,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"Une journée d'été">>}],
                body => {data, <<"Hello world">>}})),
@@ -331,7 +343,7 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"Une journée d'été"/utf8>>}],
                body => {data, <<"Hello world">>}})),
@@ -340,7 +352,7 @@ encode_part_test_() ->
       <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
         " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>,
                    <<"Une journée d'été c'est long, vraiment très long..."
@@ -352,7 +364,7 @@ encode_part_test_() ->
         " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
         " =?UTF-8?Q?_long_=21?=\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "Hello=20world\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>,
                    <<"Une journée d'été c'est long, vraiment très long..."

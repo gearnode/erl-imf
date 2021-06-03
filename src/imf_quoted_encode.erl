@@ -38,7 +38,7 @@ encode_us_ascii_word(Bin = <<C, Rest/binary>>, Acc) ->
   EncodedByte = encode_us_ascci_byte(C),
   case iolist_size(Acc) + iolist_size(EncodedByte) of
     N when N =< 76 ->
-      encode_latin1_word(Rest, [EncodedByte | Acc]);
+      encode_us_ascii_word(Rest, [EncodedByte | Acc]);
     _ ->
       {lists:reverse(Acc), Bin}
   end.

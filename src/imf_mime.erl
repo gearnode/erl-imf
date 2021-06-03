@@ -196,7 +196,7 @@ find_content_type_boundary(Header) ->
   Parameters = maps:get(parameters, ContentType, #{}),
   maps:find(<<"boundary">>, Parameters).
 
--spec get_content_type_charset(header()) -> {ok, binary()} | error.
+-spec get_content_type_charset(header()) -> binary().
 get_content_type_charset(Header) ->
   ContentType = proplists:get_value(content_type, Header, #{}),
   Parameters = maps:get(parameters, ContentType, #{}),

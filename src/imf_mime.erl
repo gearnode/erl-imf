@@ -187,7 +187,7 @@ encode_data(Header, Bin) ->
       Charset = get_content_type_charset(Header),
       imf_quoted_encode:encode(Bin, Charset);
     base64 ->
-      []
+      imf_bencode:encode(Bin)
   end.
 
 -spec find_content_type_boundary(header()) -> {ok, iodata()} | error.

@@ -121,10 +121,21 @@ encode_part_test_() ->
    ?_assertEqual(
       <<"Content-Transfer-Encoding: base64\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
+        "SGVsbG8gd29ybGQ=\r\n">>,
       encode(#{header =>
                  [{content_transfer_encoding, base64}],
                body => {data, <<"Hello world">>}})),
+
+   ?_assertEqual(
+      <<"Content-Transfer-Encoding: base64\r\n"
+        "\r\n"
+        "V2hvb29vbyB0aGlzIGxpbmUgaXMgdmVyeSBsb25nLCBJIG1lYW4gdmVyeSB2ZXJ5IGxvbmcuIFRo\r\n"
+        "aXMgc2hvdWxkIGJlIGZvbGQgb24gbXVsdGlsaW5lIHRvIGJlIGNvbXBsaWFudCB3aXRoIE1JTUUh\r\n">>,
+      encode(#{header =>
+                 [{content_transfer_encoding, base64}],
+               body => {data, <<"Whooooo this line is very long, I mean very"
+                                " very long. This should be fold on multiline"
+                                " to be compliant with MIME!">>}})),
 
    %% Content-ID header field
    ?_assertEqual(

@@ -16,20 +16,44 @@
 
 -export([encode/2]).
 
--spec encode(binary(), binary()) -> binary().
+-spec encode(binary(), binary()) -> iodata().
 encode(Bin, <<"UTF-8">>) ->
-  iolist_to_binary(encode_utf8_words(Bin, []));
+  encode_utf8_words(Bin, []);
 encode(Bin, <<"ISO-8859-1">>) ->
-  iolist_to_binary(encode_latin1_words(Bin, []));
+  encode_latin1_words(Bin, []);
 encode(Bin, <<"US-ASCII">>) ->
-  Bin.
+  encode_us_ascii_words(Bin, []).
+
+-spec encode_us_ascii_words(binary(), iodata()) -> iodata().
+encode_us_ascii_words(<<>>, Acc) ->
+  lists:join("=\n", lists:reverse(Acc));
+encode_us_ascii_words(Bin, Acc) ->
+  {EncodedWord, Rest} = encode_us_ascii_word(Bin, []),
+  encode_us_ascii_words(Rest, [EncodedWord | Acc]).
+
+-spec encode_us_ascii_word(binary(), iodata()) -> {iodata(), binary()}.
+encode_us_ascii_word(<<>>, Acc) ->
+  {lists:reverse(Acc), <<>>};
+encode_us_ascii_word(Bin = <<C, Rest/binary>>, Acc) ->
+  EncodedByte = encode_us_ascci_byte(C),
+  case iolist_size(Acc) + iolist_size(EncodedByte) of
+    N when N =< 76 ->
+      encode_latin1_word(Rest, [EncodedByte | Acc]);
+    _ ->
+      {lists:reverse(Acc), Bin}
+  end.
+
+encode_us_ascci_byte(C) when C >= 33, C =< 60; C >= 62, C =< 126 ->
+  [C];
+encode_us_ascci_byte(C) ->
+  io_lib:format("=~2.16.0B", [C]).
 
 -spec encode_utf8_words(binary(), iodata()) -> iodata().
 encode_utf8_words(<<>>, Acc) ->
-  lists:reverse(lists:join($\s, Acc));
+  lists:join("=\n", lists:reverse(Acc));
 encode_utf8_words(Bin, Acc) ->
-  {EncodingWord, Rest} = encode_utf8_word(Bin, []),
-  encode_utf8_words(Rest, [EncodingWord | Acc]).
+  {EncodedWord, Rest} = encode_utf8_word(Bin, []),
+  encode_utf8_words(Rest, [EncodedWord | Acc]).
 
 -spec encode_utf8_word(binary(), iodata()) -> {iodata(), binary()}.
 encode_utf8_word(<<>>, Acc) ->
@@ -37,7 +61,7 @@ encode_utf8_word(<<>>, Acc) ->
 encode_utf8_word(Bin = <<C/utf8, Rest/binary>>, Acc) ->
   EncodedCodePoint = imf_encode:encode_utf8_codepoint(C),
   case iolist_size(Acc) + iolist_size(EncodedCodePoint) of
-    N when N =< 73 ->
+    N when N =< 76 ->
       encode_utf8_word(Rest, [EncodedCodePoint | Acc]);
     _ ->
       {lists:reverse(Acc), Bin}
@@ -45,10 +69,10 @@ encode_utf8_word(Bin = <<C/utf8, Rest/binary>>, Acc) ->
 
 -spec encode_latin1_words(binary(), iodata()) -> iodata().
 encode_latin1_words(<<>>, Acc) ->
-  lists:reverse(lists:join($\s, Acc));
+  lists:join("=\n", lists:reverse(Acc));
 encode_latin1_words(Bin, Acc) ->
-  {EncodingWord, Rest} = encode_latin1_word(Bin, []),
-  encode_latin1_words(Rest, [EncodingWord | Acc]).
+  {EncodedWord, Rest} = encode_latin1_word(Bin, []),
+  encode_latin1_words(Rest, [EncodedWord | Acc]).
 
 -spec encode_latin1_word(binary(), iodata()) -> {iodata(), binary()}.
 encode_latin1_word(<<>>, Acc) ->
@@ -56,7 +80,7 @@ encode_latin1_word(<<>>, Acc) ->
 encode_latin1_word(Bin = <<C, Rest/binary>>, Acc) ->
   EncodedByte = imf_encode:encode_latin1_byte(C),
   case iolist_size(Acc) + iolist_size(EncodedByte) of
-    N when N =< 73 ->
+    N when N =< 76 ->
       encode_latin1_word(Rest, [EncodedByte | Acc]);
     _ ->
       {lists:reverse(Acc), Bin}

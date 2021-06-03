@@ -29,7 +29,7 @@ encode(Bin) ->
 
 -spec encode_utf8_words(binary(), iodata()) -> iodata().
 encode_utf8_words(<<>>, Acc) ->
-  lists:reverse(lists:join($\s, Acc));
+  lists:join($\s, lists:reverse(Acc));
 encode_utf8_words(Bin, Acc) ->
   {EncodingWord, Rest} = encode_utf8_word(Bin, ["?Q?", "UTF-8", "=?"]),
   encode_utf8_words(Rest, [[EncodingWord, "?="] | Acc]).
@@ -48,7 +48,7 @@ encode_utf8_word(Bin = <<C/utf8, Rest/binary>>, Acc) ->
 
 -spec encode_latin1_words(binary(), iodata()) -> iodata().
 encode_latin1_words(<<>>, Acc) ->
-  lists:reverse(lists:join($\s, Acc));
+  lists:join($\s, lists:reverse(Acc));
 encode_latin1_words(Bin, Acc) ->
   {EncodingWord, Rest} = encode_latin1_word(Bin, ["?Q?", "ISO-8859-1", "=?"]),
   encode_latin1_words(Rest, [[EncodingWord, "?="] | Acc]).

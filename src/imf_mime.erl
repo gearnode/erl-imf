@@ -185,7 +185,7 @@ encode_data(Header, Bin) ->
       [];
     quoted_printable ->
       Charset = get_content_type_charset(Header),
-      imf_quoted_encode:encode(Bin, Charset);
+      imf_quoted_encode:encode(Bin, string:uppercase(Charset));
     base64 ->
       imf_bencode:encode(Bin)
   end.

@@ -19,8 +19,8 @@
   {applications,
    [kernel,
     stdlib,
-    hex,
-    ksuid
+    ksuid,
+    b64
    ]},
   {env,[]},
   {modules, []},

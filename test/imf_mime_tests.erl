@@ -102,12 +102,36 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Transfer-Encoding: quoted-printable\r\n"
+      <<"Mime-Version: 1.0\r\n"
+        "Content-Type: text/plain;\r\n"
+        " charset=\"UTF-8\"\r\n"
+        "Content-Transfer-Encoding: quoted-printable\r\n"
+        "Content-Disposition: inline\r\n"
         "\r\n"
-        "Hello_world\r\n">>,
-      encode(#{header =>
-                 [{content_transfer_encoding, quoted_printable}],
-               body => {data, <<"Hello world">>}})),
+        "Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8slong..._non_m=\n"
+        "ais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s_long_=21\r\n"
+        "\r\n">>,
+      encode(
+        imf_mime:main_part(
+          imf_mime:text_plain(<<"Une journée d'été c'est long, vraiment très"
+                                "long... non mais genre vraiment très très "
+                                " très long !"/utf8>>)))),
+
+   ?_assertEqual(
+      <<"Mime-Version: 1.0\r\n"
+        "Content-Type: text/plain;\r\n"
+        " charset=\"ISO-8859-1\"\r\n"
+        "Content-Transfer-Encoding: quoted-printable\r\n"
+        "Content-Disposition: inline\r\n"
+        "\r\n"
+        "Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8slong..._non_mais_genre_vr=\n"
+        "aiment_tr=E8s_tr=E8s__tr=E8s_long_=21\r\n"
+        "\r\n">>,
+      encode(
+        imf_mime:main_part(
+          imf_mime:text_plain(<<"Une journée d'été c'est long, vraiment très"
+                                "long... non mais genre vraiment très très "
+                                " très long !">>)))),
 
    ?_assertEqual(
       <<"Content-Transfer-Encoding: base64\r\n"

@@ -72,7 +72,7 @@
 
 -type text() :: binary().
 
--spec main_part(body()) -> body().
+-spec main_part(body()) -> part().
 main_part(Body) ->
   #{header =>
       [{mime_version, {1,0}}],

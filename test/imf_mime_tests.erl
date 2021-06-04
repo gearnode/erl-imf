@@ -108,8 +108,9 @@ encode_part_test_() ->
         "Content-Transfer-Encoding: quoted-printable\r\n"
         "Content-Disposition: inline\r\n"
         "\r\n"
-        "Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8slong..._non_m=\n"
-        "ais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s_long_=21\r\n"
+        "Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment=20tr=C3=A8sl=\n"
+        "ong...=20non=20mais=20genre=20vraiment=20tr=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8=\n"
+        "s=20long=20=21\r\n"
         "\r\n">>,
       encode(
         imf_mime:main_part(
@@ -124,8 +125,8 @@ encode_part_test_() ->
         "Content-Transfer-Encoding: quoted-printable\r\n"
         "Content-Disposition: inline\r\n"
         "\r\n"
-        "Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8slong..._non_mais_genre_vr=\n"
-        "aiment_tr=E8s_tr=E8s__tr=E8s_long_=21\r\n"
+        "Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20tr=E8slong...=20non=\n"
+        "=20mais=20genre=20vraiment=20tr=E8s=20tr=E8s=20=20tr=E8s=20long=20=21\r\n"
         "\r\n">>,
       encode(
         imf_mime:main_part(
@@ -199,7 +200,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n"
+      <<"Content-Description: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -207,7 +208,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n"
+      <<"Content-Description: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -215,8 +216,9 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
-        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n"
+      <<"Content-Description: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20t?=\r\n"
+        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?="
+        " =?ISO-8859-1?Q?=20tr=E8s=20=20tr=E8s=20long=20=21?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -226,9 +228,9 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n"
-        " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
-        " =?UTF-8?Q?_long_=21?=\r\n"
+      <<"Content-Description: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment?=\r\n"
+        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?="
+        " =?UTF-8?Q?=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8s=20long=20=21?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -333,7 +335,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9?=\r\n"
+      <<"X-Internal-Field: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -341,7 +343,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9?=\r\n"
+      <<"X-Internal-Field: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -349,8 +351,9 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?ISO-8859-1?Q?Une_journ=E9e_d'=E9t=E9_c'est_long,_vraiment_tr=E8s_long..?=\r\n"
-        " =?ISO-8859-1?Q?._non_mais_genre_vraiment_tr=E8s_tr=E8s__tr=E8s_long_=21?=\r\n"
+      <<"X-Internal-Field: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20t?=\r\n"
+        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?="
+        " =?ISO-8859-1?Q?=20tr=E8s=20=20tr=E8s=20long=20=21?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -360,9 +363,9 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: =?UTF-8?Q?Une_journ=C3=A9e_d'=C3=A9t=C3=A9_c'est_long,_vraiment_tr=C3=A8s?=\r\n"
-        " =?UTF-8?Q?_long..._non_mais_genre_vraiment_tr=C3=A8s_tr=C3=A8s__tr=C3=A8s?="
-        " =?UTF-8?Q?_long_=21?=\r\n"
+      <<"X-Internal-Field: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment?=\r\n"
+        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?="
+        " =?UTF-8?Q?=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8s=20long=20=21?=\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>

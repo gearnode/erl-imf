@@ -41,8 +41,6 @@ is_ascii(_) ->
   false.
 
 -spec encode_utf8_codepoint(byte()) -> iodata().
-encode_utf8_codepoint($\s) ->
-  [$_];
 encode_utf8_codepoint(C) when
     C > $\s, C =< $~, C =/= $_, C =/= $=, C =/= $! ->
   [C];
@@ -59,8 +57,6 @@ encode_utf8_codepoint(C) ->
   end.
 
 -spec encode_latin1_byte(byte()) -> iodata().
-encode_latin1_byte($\s) ->
-  [$_];
 encode_latin1_byte(C) when
     C > $\s, C =< $~, C =/= $_, C =/= $=, C =/= $! ->
   [C];

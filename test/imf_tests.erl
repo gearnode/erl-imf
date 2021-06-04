@@ -1196,7 +1196,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Subject: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20t?=\r\n"
-        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?="
+        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?=\r\n"
         " =?ISO-8859-1?Q?=20tr=E8s=20=20tr=E8s=20long=20=21?=\r\n"
         "\r\n"
         "\r\n">>,
@@ -1207,7 +1207,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Subject: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment?=\r\n"
-        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?="
+        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?=\r\n"
         " =?UTF-8?Q?=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8s=20long=20=21?=\r\n"
         "\r\n"
         "\r\n">>,
@@ -1247,7 +1247,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Comments: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20t?=\r\n"
-        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?="
+        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?=\r\n"
         " =?ISO-8859-1?Q?=20tr=E8s=20=20tr=E8s=20long=20=21?=\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{comments, <<"Une journée d'été c'est long, vraiment très long... "
@@ -1256,7 +1256,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"Comments: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment?=\r\n"
-        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?="
+        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?=\r\n"
         " =?UTF-8?Q?=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8s=20long=20=21?=\r\n"
         "\r\n"
         "\r\n">>,
@@ -2215,7 +2215,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"X-Internal-Field: =?ISO-8859-1?Q?Une=20journ=E9e=20d'=E9t=E9=20c'est=20long,=20vraiment=20t?=\r\n"
-        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?="
+        " =?ISO-8859-1?Q?r=E8s=20long...=20non=20mais=20genre=20vraiment=20tr=E8s?=\r\n"
         " =?ISO-8859-1?Q?=20tr=E8s=20=20tr=E8s=20long=20=21?=\r\n"
         "\r\n"
         "\r\n">>,
@@ -2227,7 +2227,7 @@ encode_test_() ->
 
    ?_assertEqual(
       <<"X-Internal-Field: =?UTF-8?Q?Une=20journ=C3=A9e=20d'=C3=A9t=C3=A9=20c'est=20long,=20vraiment?=\r\n"
-        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?="
+        " =?UTF-8?Q?=20tr=C3=A8s=20long...=20non=20mais=20genre=20vraiment=20tr?=\r\n"
         " =?UTF-8?Q?=C3=A8s=20tr=C3=A8s=20=20tr=C3=A8s=20long=20=21?=\r\n"
         "\r\n"
         "\r\n">>,

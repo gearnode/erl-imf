@@ -36,16 +36,25 @@ wrap_lines(Bin, Prepend, Acc) ->
 
 -spec fold(binary(), non_neg_integer(), iodata()) -> {iodata(), binary()}.
 fold(Bin, LineSize, Acc) ->
-  case binary:split(Bin, [<<$\s>>, <<$\t>>]) of
-    [P1, P2] ->
-      case LineSize + byte_size(P1) + 1 of
-        LineSize2 when LineSize2 < 78 ->
-          fold(P2, LineSize2, [[$\s, P1]| Acc]);
-        _ when Acc =:= [] ->
-          {lists:reverse([[$\s, P1] | Acc]), P2};
-        _ ->
+  case split(Bin) of
+    {<<>>, <<>>} ->
+      {lists:reverse(Acc), Bin};
+    {Word, Rest} ->
+      LineSize2 = LineSize + byte_size(Word) + 1,
+
+      if
+        LineSize2 < 78 ->
+          fold(Rest, LineSize2, [[$\s, Word] | Acc]);
+        LineSize2 > 78, Acc =:= [] ->
+          fold(Rest, LineSize2, [[$\s, Word] | Acc]);
+        true ->
           {lists:reverse(Acc), Bin}
-      end;
-    [P1] ->
-      {lists:reverse([[$\s, P1] | Acc]), <<>>}
+      end
+  end.
+
+-spec split(binary()) -> {binary(), binary()}.
+split(Bin) ->
+  case binary:split(Bin, [<<$\s>>, <<$\t>>]) of
+    [P1, P2] -> {P1, P2};
+    [P1] -> {P1, <<>>}
   end.

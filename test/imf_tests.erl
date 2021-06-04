@@ -1167,13 +1167,17 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: \" \"\r\n\r\n\r\n">>,
+      <<"Subject:\r\n"
+        "\r\n"
+        "\r\n">>,
       encode(#{header =>
                  [{subject, <<" ">>}],
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Subject: \"hello world\"\r\n\r\n\r\n">>,
+      <<"Subject: hello world\r\n"
+        "\r\n"
+        "\r\n">>,
       encode(#{header =>
                  [{subject, <<"hello world">>}],
                body => EmptyBody})),
@@ -1224,7 +1228,9 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"Comments: \"my comment\"\r\n\r\n\r\n">>,
+      <<"Comments: my comment\r\n"
+        "\r\n"
+        "\r\n">>,
       encode(#{header =>
                  [{comments, <<"my comment">>}],
                body => EmptyBody})),
@@ -2192,7 +2198,9 @@ encode_test_() ->
                body => EmptyBody})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: \"hello world\"\r\n\r\n\r\n">>,
+      <<"X-Internal-Field: hello world\r\n"
+        "\r\n"
+        "\r\n">>,
       encode(#{header =>
                  [{<<"X-Internal-Field">>, <<"hello world">>}],
                body => EmptyBody})),

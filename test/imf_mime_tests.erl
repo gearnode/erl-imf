@@ -184,7 +184,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: \" \"\r\n"
+      <<"Content-Description:\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -192,7 +192,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"Content-Description: \"hello world\"\r\n"
+      <<"Content-Description: hello world\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>
@@ -327,7 +327,7 @@ encode_part_test_() ->
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
-      <<"X-Internal-Field: \"hello world\"\r\n"
+      <<"X-Internal-Field: hello world\r\n"
         "\r\n"
         "Hello=20world\r\n">>,
       encode(#{header =>

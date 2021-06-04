@@ -22,7 +22,7 @@ encode(Bin, Prepend) ->
     <<>> ->
       [" \r\n"];
     Bin ->
-      wrap_lines(imf:quote(Bin, atom), Prepend, []);
+      wrap_lines(Bin, Prepend, []);
     Encoded ->
       wrap_lines(Encoded, Prepend, [])
   end.
@@ -38,7 +38,7 @@ wrap_lines(Bin, Prepend, Acc) ->
 fold(Bin, LineSize, Acc) ->
   case split(Bin) of
     {<<>>, <<>>} ->
-      {lists:reverse(Acc), Bin};
+      {lists:reverse(Acc), <<>>};
     {Word, Rest} ->
       LineSize2 = LineSize + byte_size(Word) + 1,
 

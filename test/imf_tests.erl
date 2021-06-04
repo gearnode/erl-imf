@@ -2244,3 +2244,100 @@ encode_test_() ->
                    <<"Une journée d'été c'est long, vraiment très long..."
                      " non mais genre vraiment très très  très long !"/utf8>>}],
                body => EmptyBody}))].
+
+mailbox_test_() ->
+  [?_assertEqual(
+     {mailbox, #{name => <<"John Doe">>, address => <<"john@example.com">>}},
+     imf:mailbox(<<"John Doe">>, <<"john@example.com">>)),
+
+   ?_assertEqual(
+      {mailbox, #{address => <<"john@example.com">>}},
+      imf:mailbox(<<"john@example.com">>))].
+
+group_test_() ->
+  [?_assertEqual(
+      {group, #{name => <<"My Group">>}},
+      imf:group(<<"My Group">>)),
+   ?_assertEqual(
+      {group,
+       #{addresses =>
+           [{mailbox,#{address => <<"john@example.com">>}},
+            {mailbox,
+             #{address => <<"jane@example.com">>,
+               name => <<"Jane Doe">>}}],
+         name => <<"My Group">>}},
+      imf:group(<<"My Group">>,
+                [<<"john@example.com">>,
+                 {<<"Jane Doe">>, <<"jane@example.com">>}]))].
+
+simple_mail_test() ->
+  Mail =
+    #{body =>
+        #{body =>
+            {part,#{body =>
+                      {part,#{body =>
+                                [{part,#{body => {data,<<"<h1>Hello</h1>">>},
+                                         header =>
+                                           [{content_type,#{parameters =>
+                                                              #{<<"charset">> => <<"US-ASCII">>},
+                                                            subtype => <<"html">>,type => <<"text">>}},
+                                            {content_transfer_encoding,quoted_printable},
+                                            {content_disposition,#{type => inline}}]}},
+                                 {part,#{body => {data,<<"Hello">>},
+                                         header =>
+                                           [{content_type,#{parameters =>
+                                                              #{<<"charset">> => <<"US-ASCII">>},
+                                                            subtype => <<"plain">>,type => <<"text">>}},
+                                            {content_transfer_encoding,quoted_printable},
+                                            {content_disposition,#{type => inline}}]}}],
+                              header =>
+                                [{content_type,#{parameters =>
+                                                   #{<<"boundary">> => <<"1tUYMgUv5wDLSLBB4Bvk1BIaS0j">>},
+                                                 subtype => <<"alternative">>,type => <<"multipart">>}}]}},
+                    header =>
+                      [{content_type,#{parameters =>
+                                         #{<<"boundary">> => <<"1tUYMgxLCgawcPcwofFdiWaTdmc">>},
+                                       subtype => <<"mixed">>,type => <<"multipart">>}}]}},
+          header => [{mime_version,{1,0}}]},
+      header =>
+        [{date,{localtime,{{2021,6,4},{18,43,27}}}},
+         {from,[{mailbox,#{address => <<"john@example.com">>,name => <<"John Doe">>}}]},
+         {to,[{mailbox,#{address => <<"jane@example.com">>,name => <<"Jane Doe">>}}]},
+         {message_id,{<<"1tUYMlcoGsQZcv3vQYNPOXYYgWO">>,
+                      <<"basile.localdomain">>}},
+         {subject,<<"I can compose with Erlang!">>}]},
+
+  ?assertEqual(
+     <<"Date: Fri, 4 Jun 2021 18:43:27 -0400\r\n"
+       "From: \"John Doe\" <john@example.com>\r\n"
+       "To: \"Jane Doe\" <jane@example.com>\r\n"
+       "Message-ID: <1tUYMlcoGsQZcv3vQYNPOXYYgWO@basile.localdomain>\r\n"
+       "Subject: I can compose with Erlang!\r\n"
+       "Mime-Version: 1.0\r\n"
+       "Content-Type: multipart/mixed;\r\n"
+       " boundary=\"1tUYMgxLCgawcPcwofFdiWaTdmc\"\r\n"
+       "\r\n"
+       "--1tUYMgxLCgawcPcwofFdiWaTdmc\r\n"
+       "Content-Type: multipart/alternative;\r\n"
+       " boundary=\"1tUYMgUv5wDLSLBB4Bvk1BIaS0j\"\r\n"
+       "\r\n"
+       "--1tUYMgUv5wDLSLBB4Bvk1BIaS0j\r\n"
+       "Content-Type: text/html;\r\n"
+       " charset=\"US-ASCII\"\r\n"
+       "Content-Transfer-Encoding: quoted-printable\r\n"
+       "Content-Disposition: inline\r\n"
+       "\r\n"
+       "<h1>Hello</h1>\r\n"
+       "\r\n"
+       "--1tUYMgUv5wDLSLBB4Bvk1BIaS0j\r\n"
+       "Content-Type: text/plain;\r\n"
+       " charset=\"US-ASCII\"\r\n"
+       "Content-Transfer-Encoding: quoted-printable\r\n"
+       "Content-Disposition: inline\r\n"
+       "\r\nHello\r\n"
+       "\r\n"
+       "--1tUYMgUv5wDLSLBB4Bvk1BIaS0j--\r\n"
+       "\r\n"
+       "--1tUYMgxLCgawcPcwofFdiWaTdmc--\r\n"
+       "\r\n">>,
+     encode(Mail)).

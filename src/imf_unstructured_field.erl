@@ -45,7 +45,7 @@ fold(Bin, LineSize, Acc) ->
       if
         LineSize2 < 78 ->
           fold(Rest, LineSize2, [[$\s, Word] | Acc]);
-        LineSize2 > 78, Acc =:= [] ->
+        LineSize2 >= 78, Acc =:= [] ->
           fold(Rest, LineSize2, [[$\s, Word] | Acc]);
         true ->
           {lists:reverse(Acc), Bin}

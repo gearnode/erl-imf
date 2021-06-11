@@ -41,12 +41,12 @@ The following header fields are currently supported:
   containing a mix of [mailboxes](#types) and [groups](#types).
 - `bcc` The blind carbon copy recipient addresses. The value is a list
   containing a mix of [mailboxes](#types) and [groups](#types).
-- `message_id`: The globally unique email identifier. The value is a
-  [message-id](#types).
+- `message_id`: The globally unique message identifier. The value is a
+  [message id](#types).
 - `in_reply_to`: The unique identifier reference to the replied
-  email. The value is a [message-id](#types).
-- `references`: Unique identifier references to related emails. The
-  value is a list of [message-id](#types).
+  message. The value is a [message id](#types).
+- `references`: Unique identifier references to related messages. The
+  value is a list of [message id](#types).
 
 ## Message body
 

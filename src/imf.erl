@@ -22,6 +22,8 @@
 
 -export([mailbox/1, mailbox/2, group/1, group/2]).
 
+-export([recipient_addresses/1]).
+
 -export_type([message/0, header/0]).
 
 -export_type([field/0, origination_date_field/0, originator_field/0,
@@ -95,6 +97,31 @@
 -type phrase() :: binary().
 
 -type date() :: {localtime, calendar:datetime()}.
+
+-spec recipient_addresses(message()) -> [binary()].
+recipient_addresses(#{header := Header}) ->
+  Set = sets:new(),
+  F = fun
+        ({FieldName, Values}, Set) when FieldName =:= to;
+                                        FieldName =:= cc;
+                                        FieldName =:= bcc ->
+          lists:foldl(
+            fun (Value, Set) ->
+                case Value of
+                  {group, #{addresses := AddressesSpec}} ->
+                    lists:foldl(
+                      fun ({mailbox, #{address := AddrSpec}}, Set) ->
+                          sets:add_element(AddrSpec, Set)
+                      end, Set, AddressesSpec);
+                  {mailbox, #{address := AddrSpec}} ->
+                    sets:add_element(AddrSpec, Set)
+                end
+            end, Set, Values);
+        (_, Acc) ->
+          Acc
+      end,
+  Set2 = lists:foldl(F, Set, Header),
+  sets:to_list(Set2).
 
 -spec quote(binary(), atom | dotatom) -> binary().
 quote(Bin, Type) ->

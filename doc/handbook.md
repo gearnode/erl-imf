@@ -28,7 +28,7 @@ each tuple is the name of the field and second element is the value of
 the field.
 
 Supported header field name must be an atom. For non supported header
-field the key must be an binary.
+field the key must be a binary.
 
 The following header fields are currently supported:
 

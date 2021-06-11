@@ -13,7 +13,43 @@ updating their application when `imf` is modified. Note that
 unstable versions can be modified without backward compatibility at any
 time.
 
-# Encode
+# Types
+TODO describe type
+
+# Message structure
+The e-mail is represented as an Erlang map containing the following
+entries:
+- `header`: the set of header fields documented below.
+- `body`: the representation of the message body documenetd below.
+
+## Header fields
+Header fields are represented as list of tuples; the first element of
+each tuple is the name of the field and second element is the value of
+the field.
+
+- know header field atom
+- unknow binary
+
+The following header fields are currently supported:
+- `date`: TODO
+- `from`: TODO
+- `sender`: TODO
+- `reply_to`: TODO
+- `to`: The recipient addresses. The value is a list containing a mix
+  of [mailboxes](#types) and [groups](#types).
+- `cc` The carbon copy recipient addresses. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `bcc` The blind carbon copy recipient addresses. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `message_id`: The globally unique email identifier. The value is a
+  [message-id](#types).
+- `in_reply_to`: The unique identifier reference to the replied
+  email. The value is a [message-id](#types).
+- `references`: Unique identifier references to related emails. The
+  value is a list of [message-id](#types).
+
+## Message body
+
 
 Example:
 ```erlang

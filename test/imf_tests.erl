@@ -16,6 +16,30 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+recipient_addresses_test() ->
+  Mail = #{header =>
+             [{to,
+               [imf:mailbox(<<"John Doe">>, <<"john@example.com">>),
+                imf:mailbox(<<"jane@example.com">>)]},
+              {subject, <<"Hello">>},
+              {bcc,
+               [imf:mailbox(<<"p1@example.com">>),
+                imf:mailbox(<<"p3@example.com">>)]},
+              {cc,
+               [imf:group(<<"Stakeholder">>,
+                          [<<"p1@example.com">>,
+                           {<<"P2">>, <<"p2@example.com">>}])]}],
+           body =>
+             #{header => [],
+               body =>
+                 {data, <<"Hello world!">>}}},
+
+  ?assertEqual(
+     [<<"p2@example.com">>,<<"p1@example.com">>,
+      <<"jane@example.com">>,<<"john@example.com">>,
+      <<"p3@example.com">>],
+     imf:recipient_addresses(Mail)).
+
 quote_test_() ->
   [?_assertEqual(<<"hello">>,
                  imf:quote(<<"hello">>, atom)),

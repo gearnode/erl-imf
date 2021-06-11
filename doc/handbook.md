@@ -31,10 +31,14 @@ the field.
 - unknow binary
 
 The following header fields are currently supported:
-- `date`: TODO
-- `from`: TODO
-- `sender`: TODO
-- `reply_to`: TODO
+- `date`: The creation datetime of the message. The value is a
+  [date](#types).
+- `from`: The message authors of the message. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `sender`: The author responsible for the actual transmission of the
+   message. The value is a [mailbox](#types).
+- `reply_to`: The addresses to which the author of the message suggests
+   that replies be sent. The value is a list of [addresses](#types).
 - `to`: The recipient addresses. The value is a list containing a mix
   of [mailboxes](#types) and [groups](#types).
 - `cc` The carbon copy recipient addresses. The value is a list

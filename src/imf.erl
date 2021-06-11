@@ -120,8 +120,7 @@ recipient_addresses(#{header := Header}) ->
         (_, Acc) ->
           Acc
       end,
-  Set2 = lists:foldl(F, Set, Header),
-  sets:to_list(Set2).
+  sets:to_list(lists:foldl(F, Set, Header)).
 
 -spec quote(binary(), atom | dotatom) -> binary().
 quote(Bin, Type) ->

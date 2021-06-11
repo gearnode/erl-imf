@@ -31,26 +31,36 @@ the field.
 - unknow binary
 
 The following header fields are currently supported:
+
+**The Origination Date Field:**
 - `date`: The creation datetime of the message. The value is a
   [date](#types).
+
+**Originator Fields:**
 - `from`: The message authors of the message. The value is a list
   containing a mix of [mailboxes](#types) and [groups](#types).
 - `sender`: The author responsible for the actual transmission of the
    message. The value is a [mailbox](#types).
 - `reply_to`: The addresses to which the author of the message suggests
    that replies be sent. The value is a list of [addresses](#types).
+
+**Destination Address Fields:**
 - `to`: The recipient addresses. The value is a list containing a mix
   of [mailboxes](#types) and [groups](#types).
 - `cc` The carbon copy recipient addresses. The value is a list
   containing a mix of [mailboxes](#types) and [groups](#types).
 - `bcc` The blind carbon copy recipient addresses. The value is a list
   containing a mix of [mailboxes](#types) and [groups](#types).
+
+**Identification Fields:**
 - `message_id`: The globally unique message identifier. The value is a
   [message id](#types).
 - `in_reply_to`: The unique identifier reference to the replied
   message. The value is a [message id](#types).
 - `references`: Unique identifier references to related messages. The
   value is a list of [message id](#types).
+
+**Informational Fields:**
 - `subject`: the topic of the message. The value is an [unstructured
   field](#types).
 - `comments`: Comments on the text of the body message. The value is an

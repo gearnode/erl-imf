@@ -112,6 +112,8 @@ recipient_addresses(#{header := Header}) ->
                       fun ({mailbox, #{address := AddrSpec}}, Set4) ->
                           sets:add_element(AddrSpec, Set4)
                       end, Set3, AddressesSpec);
+                  {group, _} ->
+                    Set3;
                   {mailbox, #{address := AddrSpec}} ->
                     sets:add_element(AddrSpec, Set3)
                 end

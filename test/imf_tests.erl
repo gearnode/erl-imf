@@ -20,6 +20,7 @@ recipient_addresses_test() ->
   Mail = #{header =>
              [{to,
                [imf:mailbox(<<"John Doe">>, <<"john@example.com">>),
+                imf:group(<<"Undisclosed Recipients">>),
                 imf:mailbox(<<"jane@example.com">>)]},
               {subject, <<"Hello">>},
               {bcc,

@@ -102,9 +102,8 @@
 recipient_addresses(#{header := Header}) ->
   Set = sets:new(),
   F = fun
-        ({FieldName, Values}, Set2) when FieldName =:= to;
-                                         FieldName =:= cc;
-                                         FieldName =:= bcc ->
+        ({FieldName, Values}, Set2) when
+            FieldName =:= to; FieldName =:= cc; FieldName =:= bcc ->
           lists:foldl(
             fun (Value, Set3) ->
                 case Value of

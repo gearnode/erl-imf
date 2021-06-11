@@ -27,8 +27,8 @@ Header fields are represented as list of tuples; the first element of
 each tuple is the name of the field and second element is the value of
 the field.
 
-- know header field atom
-- unknow binary
+Supported header field name must be an atom. For non supported header
+field the key must be an binary.
 
 The following header fields are currently supported:
 

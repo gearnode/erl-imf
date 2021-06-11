@@ -47,6 +47,13 @@ The following header fields are currently supported:
   message. The value is a [message id](#types).
 - `references`: Unique identifier references to related messages. The
   value is a list of [message id](#types).
+- `subject`: the topic of the message. The value is an [unstructured
+  field](#types).
+- `comments`: Comments on the text of the body message. The value is an
+  [unstructured field](#types)
+- `keywords`: Important words and phrases that might be useful for the
+   recipient. The value is a list of [phrase](#types).
+
 
 ## Message body
 

@@ -102,21 +102,21 @@
 recipient_addresses(#{header := Header}) ->
   Set = sets:new(),
   F = fun
-        ({FieldName, Values}, Set) when FieldName =:= to;
+        ({FieldName, Values}, Set2) when FieldName =:= to;
                                         FieldName =:= cc;
                                         FieldName =:= bcc ->
           lists:foldl(
-            fun (Value, Set) ->
+            fun (Value, Set3) ->
                 case Value of
                   {group, #{addresses := AddressesSpec}} ->
                     lists:foldl(
-                      fun ({mailbox, #{address := AddrSpec}}, Set) ->
-                          sets:add_element(AddrSpec, Set)
-                      end, Set, AddressesSpec);
+                      fun ({mailbox, #{address := AddrSpec}}, Set4) ->
+                          sets:add_element(AddrSpec, Set4)
+                      end, Set3, AddressesSpec);
                   {mailbox, #{address := AddrSpec}} ->
-                    sets:add_element(AddrSpec, Set)
+                    sets:add_element(AddrSpec, Set3)
                 end
-            end, Set, Values);
+            end, Set2, Values);
         (_, Acc) ->
           Acc
       end,

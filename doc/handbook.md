@@ -85,7 +85,7 @@ The following header fields are currently supported:
   [message id](#types).
 
 ## Message body
-
+TODO
 
 Example:
 ```erlang

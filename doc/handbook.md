@@ -14,7 +14,7 @@ unstable versions can be modified without backward compatibility at any
 time.
 
 # Types
-TODO describe type
+TODO
 
 # Message structure
 The e-mail is represented as an Erlang map containing the following
@@ -98,9 +98,10 @@ Supported header field name must be an atom. For non supported header
 field the key must be a binary.
 
 The following header fields are currently supported:
-- `mime_version`: The mime version used. The value must be `{1,0}`
+- `mime_version`: The MIME version number. The value must be `{1,0}`
   tuple.
-- `content_type`: TODO
+- `content_type`: The MIME content type of message body part. The value
+  is a [content type](#types).
 - `content_tranfer_encoding`: The content transfer encoding applied. The
   value can be one of the following atom:
   - `7bit`
@@ -112,7 +113,5 @@ The following header fields are currently supported:
   [message id](#types).
 - `content_description`: The description of message body part. The value
   is an [unstructured field](#types).
-- `content_disposition`: TODO
-
-# Decode
-Decoding is not supported.
+- `content_disposition`: The intended content disposition and
+  filename. The value is a [content disposition](#types).

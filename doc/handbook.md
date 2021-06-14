@@ -61,7 +61,7 @@ The following header fields are currently supported:
   value is a list of [message id](#types).
 
 **Informational Fields:**
-- `subject`: the topic of the message. The value is an [unstructured
+- `subject`: The topic of the message. The value is an [unstructured
   field](#types).
 - `comments`: Comments on the text of the body message. The value is an
   [unstructured field](#types)

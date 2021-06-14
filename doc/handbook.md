@@ -68,6 +68,21 @@ The following header fields are currently supported:
 - `keywords`: Important words and phrases that might be useful for the
    recipient. The value is a list of [phrase](#types).
 
+**Resent Fields:**
+- `resent_date`: Corresponds to the `date` field. The value is a
+  [date](#types).
+- `resent_from`: Corresponds to the `from` field. The value is list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `resent_sender`: Corresponds to the `sender` field. The value is a
+  [mailbox](#types).
+- `resent_to`: Corresponds to the `to` field. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `resent_cc`: Corresponds to the `cc` field. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `resent_bcc`: Corresponds to the `bcc` field. The value is a list
+  containing a mix of [mailboxes](#types) and [groups](#types).
+- `resent_msg_id`: Corresponds to the `message_id` field. The value is a
+  [message id](#types).
 
 ## Message body
 

@@ -120,5 +120,23 @@ The following header fields are currently supported:
 ### Body
 The message body can be the following types or a list containing a mix
 of those two types:
-- `{iodata, <<"some binary data">>}`
+- `{data, <<"some binary data">>}`
 - `{part, #{header => [], body => {iodata, <<"some binary data">>}}}`
+
+# Example
+
+Encode a simple email without MIME part.
+```erlang
+Mail = #{header =>
+           [{message_id, imf:generate_message_id()},
+            {from,
+             [imf:mailbox(<<"John Doe">>, <<"john.doe@example.com">>])},
+            {to,
+             [imf:mailbox(<<"Jane Doe">>, <<"jane.doe@example.com">>)]},
+            {subject, <<"Hello Jane!">>}],
+         body =>
+           #{header => [],
+             body =>
+               {iodata, <<"Hello Jane! Is just a message :)">>}}},
+imf:encode(Mail).
+```

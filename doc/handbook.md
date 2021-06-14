@@ -85,7 +85,34 @@ The following header fields are currently supported:
   [message id](#types).
 
 ## Message body
-TODO
+Message body are represented as an Erlang map containing the following
+entries:
+- `header`: the set of header fields documented below.
+- `body`: the representation of the message body documenetd below.
+
+Header fields are represented as list of tuples; the first element of
+each tuple is the name of the field and second element is the value of
+the field.
+
+Supported header field name must be an atom. For non supported header
+field the key must be a binary.
+
+The following header fields are currently supported:
+- `mime_version`: The mime version used. The value must be `{1,0}`
+  tuple.
+- `content_type`: TODO
+- `content_tranfer_encoding`: The content transfer encoding applied. The
+  value can be one of the following atom:
+      - `7bit`
+      - `8bit`
+      - `binary`
+      - `quoted_printable`
+      - `base64`
+- `content_id`: The unique indenfier of the body part. The value is a
+  [message id](#types).
+- `content_description`: The description of message body part. The value
+  is an [unstructured field](#types).
+- `content_disposition`: TODO
 
 # Decode
 Decoding is not supported.

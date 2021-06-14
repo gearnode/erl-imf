@@ -118,4 +118,7 @@ The following header fields are currently supported:
   filename. The value is a [content disposition](#types).
 
 ### Body
-TODO
+The message body can be the following types or a list containing a mix
+of those two types:
+- `{iodata, <<"some binary data">>}`
+- `{part, #{header => [], body => {iodata, <<"some binary data">>}}}`

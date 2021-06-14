@@ -103,11 +103,11 @@ The following header fields are currently supported:
 - `content_type`: TODO
 - `content_tranfer_encoding`: The content transfer encoding applied. The
   value can be one of the following atom:
-      - `7bit`
-      - `8bit`
-      - `binary`
-      - `quoted_printable`
-      - `base64`
+  - `7bit`
+  - `8bit`
+  - `binary`
+  - `quoted_printable`
+  - `base64`
 - `content_id`: The unique indenfier of the body part. The value is a
   [message id](#types).
 - `content_description`: The description of message body part. The value

@@ -85,8 +85,8 @@ The following header fields are currently supported:
   [message id](#types).
 
 ## Message body
-Message body are represented as an Erlang map containing the following
-entries:
+The message body is represented as an Erlang map containing the
+following entries:
 - `header`: the set of header fields documented below.
 - `body`: the representation of the message body documenetd below.
 

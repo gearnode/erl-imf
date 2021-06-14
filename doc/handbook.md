@@ -125,18 +125,35 @@ of those two types:
 
 # Example
 
-Encode a simple email without MIME part.
+The example below compose an message with one text plain part.
 ```erlang
 Mail = #{header =>
            [{message_id, imf:generate_message_id()},
             {from,
-             [imf:mailbox(<<"John Doe">>, <<"john.doe@example.com">>])},
+             [imf:mailbox(<<"John Doe">>, <<"john.doe@example.com">>)]},
             {to,
              [imf:mailbox(<<"Jane Doe">>, <<"jane.doe@example.com">>)]},
             {subject, <<"Hello Jane!">>}],
          body =>
-           #{header => [],
-             body =>
-               {iodata, <<"Hello Jane! Is just a message :)">>}}},
+           imf_mime:main_part(
+             imf_mime:text_plain(<<"Hello Jane! This is a simple text plain message">>))},
+imf:encode(Mail).
+```
+
+The example below compose an message with one text plain part and one
+html part.
+```erlang
+Mail = #{header =>
+           [{message_id, imf:generate_message_id()},
+            {from,
+             [imf:mailbox(<<"John Doe">>, <<"john.doe@example.com">>)]},
+            {to,
+             [imf:mailbox(<<"Jane Doe">>, <<"jane.doe@example.com">>)]},
+            {subject, <<"Hello Jane!">>}],
+         body =>
+           imf_mime:main_part(
+             imf_mime:multipart_alternative(
+               [imf_mime:text_plain(<<"Hello Jane! This is a simple text plain message">>),
+                imf_mime:text_html(<<"<h1>Hello Jane!</h1> This is a <b>simple<b> html message">>)]))},
 imf:encode(Mail).
 ```

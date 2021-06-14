@@ -90,6 +90,7 @@ entries:
 - `header`: the set of header fields documented below.
 - `body`: the representation of the message body documenetd below.
 
+### Header
 Header fields are represented as list of tuples; the first element of
 each tuple is the name of the field and second element is the value of
 the field.
@@ -115,3 +116,6 @@ The following header fields are currently supported:
   is an [unstructured field](#types).
 - `content_disposition`: The intended content disposition and
   filename. The value is a [content disposition](#types).
+
+### Body
+TODO

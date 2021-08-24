@@ -83,7 +83,14 @@ encode_test_() ->
       <<"Date: Fri, 21 May 2021 14:47:17 -0400\r\n\r\n\r\n">>,
       encode(#{header =>
                  [{date,
-                   {localtime, {{2021,5,21},{14,47,17}}}}],
+                   {local, {{2021,5,21},{14,47,17}}}}],
+               body => EmptyBody})),
+
+   ?_assertEqual(
+      <<"Date: Fri, 21 May 2021 14:47:17 +0000\r\n\r\n\r\n">>,
+      encode(#{header =>
+                 [{date,
+                   {universal, {{2021,5,21},{14,47,17}}}}],
                body => EmptyBody})),
 
    %% From header field
@@ -1337,7 +1344,13 @@ encode_test_() ->
    ?_assertEqual(
       <<"Resent-Date: Mon, 24 May 2021 13:20:35 -0400\r\n\r\n\r\n">>,
       encode(#{header =>
-                 [{resent_date, {localtime, {{2021,5,24},{13,20,35}}}}],
+                 [{resent_date, {local, {{2021,5,24},{13,20,35}}}}],
+               body => EmptyBody})),
+
+   ?_assertEqual(
+      <<"Resent-Date: Mon, 24 May 2021 13:20:35 +0000\r\n\r\n\r\n">>,
+      encode(#{header =>
+                 [{resent_date, {universal, {{2021,5,24},{13,20,35}}}}],
                body => EmptyBody})),
 
    %% Resent-From header field
@@ -2325,7 +2338,7 @@ simple_mail_test() ->
                                        subtype => <<"mixed">>,type => <<"multipart">>}}]}},
           header => [{mime_version,{1,0}}]},
       header =>
-        [{date,{localtime,{{2021,6,4},{18,43,27}}}},
+        [{date,{local,{{2021,6,4},{18,43,27}}}},
          {from,[{mailbox,#{address => <<"john@example.com">>,name => <<"John Doe">>}}]},
          {to,[{mailbox,#{address => <<"jane@example.com">>,name => <<"Jane Doe">>}}]},
          {message_id,{<<"1tUYMlcoGsQZcv3vQYNPOXYYgWO">>,

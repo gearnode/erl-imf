@@ -96,7 +96,7 @@
 
 -type phrase() :: binary().
 
--type date() :: {localtime, calendar:datetime()}.
+-type date() :: {local | universal, calendar:datetime()}.
 
 -spec recipient_addresses(message()) -> [binary()].
 recipient_addresses(#{header := Header}) ->

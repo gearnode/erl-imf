@@ -278,7 +278,31 @@ encode_part_test_() ->
                  [{content_disposition,
                    #{type => attachment,
                      parameters =>
-                       #{creation_date => {{2021,5,28},{15,18,20}}}}}],
+                       #{creation_date => {local, {{2021,5,28},{15,18,20}}}}}}],
+               body => {data, <<"Hello world">>}})),
+
+   ?_assertEqual(
+      <<"Content-Disposition: attachment;\r\n"
+        " creation-date=\"Fri, 28 May 2021 15:18:20 -0400\"\r\n"
+        "\r\n"
+        "Hello=20world\r\n">>,
+      encode(#{header =>
+                 [{content_disposition,
+                   #{type => attachment,
+                     parameters =>
+                       #{creation_date => {local, {{2021,5,28},{15,18,20}}}}}}],
+               body => {data, <<"Hello world">>}})),
+
+   ?_assertEqual(
+      <<"Content-Disposition: attachment;\r\n"
+        " creation-date=\"Fri, 28 May 2021 15:18:20 +0000\"\r\n"
+        "\r\n"
+        "Hello=20world\r\n">>,
+      encode(#{header =>
+                 [{content_disposition,
+                   #{type => attachment,
+                     parameters =>
+                       #{creation_date => {universal, {{2021,5,28},{15,18,20}}}}}}],
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
@@ -290,7 +314,20 @@ encode_part_test_() ->
                  [{content_disposition,
                    #{type => attachment,
                      parameters =>
-                       #{modification_date => {{2021,5,28},{15,18,20}}}}}],
+                       #{modification_date => {local, {{2021,5,28},{15,18,20}}}}}}],
+               body => {data, <<"Hello world">>}})),
+
+
+   ?_assertEqual(
+      <<"Content-Disposition: attachment;\r\n"
+        " modification-date=\"Fri, 28 May 2021 15:18:20 +0000\"\r\n"
+        "\r\n"
+        "Hello=20world\r\n">>,
+      encode(#{header =>
+                 [{content_disposition,
+                   #{type => attachment,
+                     parameters =>
+                       #{modification_date => {universal, {{2021,5,28},{15,18,20}}}}}}],
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(
@@ -302,7 +339,19 @@ encode_part_test_() ->
                  [{content_disposition,
                    #{type => attachment,
                      parameters =>
-                       #{read_date => {{2021,5,28},{15,18,20}}}}}],
+                       #{read_date => {local, {{2021,5,28},{15,18,20}}}}}}],
+               body => {data, <<"Hello world">>}})),
+
+   ?_assertEqual(
+      <<"Content-Disposition: attachment;\r\n"
+        " read-date=\"Fri, 28 May 2021 15:18:20 +0000\"\r\n"
+        "\r\n"
+        "Hello=20world\r\n">>,
+      encode(#{header =>
+                 [{content_disposition,
+                   #{type => attachment,
+                     parameters =>
+                       #{read_date => {universal, {{2021,5,28},{15,18,20}}}}}}],
                body => {data, <<"Hello world">>}})),
 
    ?_assertEqual(

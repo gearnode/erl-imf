@@ -17,16 +17,16 @@
 -export([encode/1, format/1]).
 
 -spec encode(imf:date()) -> iodata().
-encode({localtime, Value}) ->
+encode(Value) ->
   [format(Value), "\r\n"].
 
--spec format(calendar:datetime()) -> iodata().
-format(Datetime) ->
+-spec format(imf:date()) -> iodata().
+format({Type, Datetime}) ->
   {{Year, Month, Day}, {Hour, Minute, Second}} = Datetime,
   DayOfTheWeek = calendar:day_of_the_week(Year, Month, Day),
   DayName = lists:nth(DayOfTheWeek, days()),
   MonthName = lists:nth(Month, months()),
-  TZOffset = timezone_offset(Datetime),
+  TZOffset = timezone_offset({Type, Datetime}),
   io_lib:format("~s, ~b ~s ~b ~2..0b:~2..0b:~2..0b ~s",
                 [DayName, Day, MonthName, Year, Hour, Minute, Second,
                  TZOffset]).
@@ -40,8 +40,8 @@ months() ->
  ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
   "Nov", "Dec"].
 
--spec timezone_offset(calendar:datetime()) -> iodata().
-timezone_offset(Datetime) ->
+-spec timezone_offset(imf:date()) -> iodata().
+timezone_offset({local, Datetime}) ->
   UniversalDatetime = calendar:local_time_to_universal_time(Datetime),
   case calendar:datetime_to_gregorian_seconds(Datetime) -
     calendar:datetime_to_gregorian_seconds(UniversalDatetime) of
@@ -49,4 +49,6 @@ timezone_offset(Datetime) ->
       io_lib:format("-~4..0w", [trunc(abs((DiffSec / 3600) * 100))]);
     DiffSec ->
       io_lib:format("+~4..0w", [trunc(abs((DiffSec / 3600) * 100))])
-  end.
+  end;
+timezone_offset({universal, _}) ->
+  "+0000".

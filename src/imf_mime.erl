@@ -65,8 +65,8 @@
 -type disposition_type() :: inline | attachment.
 
 -type disposition_params() :: #{filename => binary(),
-                                creation_date => calendar:datetime(),
-                                modification_date => calendar:datetime(),
+                                creation_date => imf:date(),
+                                modification_date => imf:date(),
                                 read_date => calendar:datetime(),
                                 size => pos_integer()}.
 

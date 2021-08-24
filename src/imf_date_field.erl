@@ -42,7 +42,15 @@ months() ->
 
 -spec timezone_offset(imf:date()) -> iodata().
 timezone_offset({local, Datetime}) ->
-  UniversalDatetime = calendar:local_time_to_universal_time(Datetime),
+  UniversalDatetime =
+    case calendar:local_time_to_universal_time_dst(Datetime) of
+      [] ->
+        error({illegal_local_time, Datetime});
+      [_, UTC] ->
+        UTC;
+      [UTC] ->
+        UTC
+    end,
   case calendar:datetime_to_gregorian_seconds(Datetime) -
     calendar:datetime_to_gregorian_seconds(UniversalDatetime) of
     DiffSec when DiffSec < 0 ->

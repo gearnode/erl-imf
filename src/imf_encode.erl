@@ -1,3 +1,4 @@
+%% Copyright (c) 2022 Bryan Frimin <bryan@frimin.fr>.
 %% Copyright (c) 2021 Exograd SAS.
 %%
 %% Permission to use, copy, modify, and/or distribute this software for any
@@ -46,7 +47,7 @@ encode_utf8_codepoint(C) when
   [C];
 encode_utf8_codepoint(C) ->
   case <<C/utf8>> of
-    <<B1>> -> 
+    <<B1>> ->
       io_lib:format("=~2.16.0B", [B1]);
     <<B1, B2>> ->
       io_lib:format("=~2.16.0B=~2.16.0B", [B1, B2]);

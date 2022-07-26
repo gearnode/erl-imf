@@ -1,8 +1,8 @@
 [{<<"b64">>,
-  {git,"https://github.com/exograd/erl-b64.git",
-       {ref,"4e1336b4448add6885310719b412303651ab7dbd"}},
+  {git,"https://github.com/gearnode/erl-b64.git",
+       {ref,"1b1489fb78aa0fce248aa7dce1f2cfd5a55e4c5c"}},
   0},
  {<<"ksuid">>,
-  {git,"https://github.com/exograd/erl-ksuid.git",
-       {ref,"fcccb632065e70a64ad2c9c2fc4783a10d5aa810"}},
+  {git,"https://github.com/gearnode/erl-ksuid.git",
+       {ref,"c33870ca7d787d795f79afd4251d4ff1e6e54db3"}},
   0}].

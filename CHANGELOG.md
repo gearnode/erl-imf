@@ -1,4 +1,5 @@
 # Introduction
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a
@@ -7,8 +8,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2022-07-26
+
+No change.
+
 ## [0.1.0] - 2021-09-06
+
 ### Added
+
 - Support of the [RFC 5322](https://tools.ietf.org/html/rfc5322)
 - Support of the [RFC 2045](https://tools.ietf.org/html/rfc2045)
 - Support of the [RFC 2046](https://tools.ietf.org/html/rfc2046)
